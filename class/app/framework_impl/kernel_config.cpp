@@ -36,7 +36,7 @@ std::vector<std::string> Kernel_config::obtener_entradas_superficies() const
 
 DFramework::Info_ventana Kernel_config::obtener_info_ventana() const
 {
-	return DFramework::Info_ventana{800, 500, 800, 500, "Something...", true};
+	return DFramework::Info_ventana{800, 500, 800, 500, "Migrating to OpenGL...", true};
 }
 
 std::vector<DFramework::Par_input> Kernel_config::obtener_pares_input() const

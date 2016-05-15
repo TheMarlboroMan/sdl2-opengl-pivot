@@ -31,8 +31,10 @@ class Controlador_principal:
 	private:
 	
 	void					bmp(DLibV::Pantalla& pantalla, int x);
+	void					bmp_escalado(DLibV::Pantalla& pantalla, int x);
 	void					bmp_alpha(DLibV::Pantalla& pantalla, int x);
 	void					bmp_rotar(DLibV::Pantalla& pantalla, int x);
+	void					bmp_patron(DLibV::Pantalla& pantalla, int x);
 	void					ttf(DLibV::Pantalla& pantalla, int x);
 	void					caja(DLibV::Pantalla& pantalla, int x);
 	void					caja_rellena(DLibV::Pantalla& pantalla, int x);
@@ -40,13 +42,12 @@ class Controlador_principal:
 	void					poligono(DLibV::Pantalla& pantalla, int x);
 	void					poligono_relleno(DLibV::Pantalla& pantalla, int x);
 	void					puntos(DLibV::Pantalla& pantalla, int x);
+	void					compuesta(DLibV::Pantalla& pantalla, int x);
 
 	DLibH::Log_base&			log;
 	const DLibV::Fuente_TTF&		fuente;
 
 	DLibV::Camara				camara;
-	float					t;
-	int					direccion;
 };
 
 }
