@@ -43,23 +43,11 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	pantalla.limpiar(DLibV::rgba8(64, 64, 64, 255));
 	int x=0;
 
-	DLibV::Representacion_primitiva_caja_lineas ccam{{200, 200, 100, 100}, DLibV::rgba8(255, 255, 255, 64)};
-	ccam.establecer_alpha(64);
+	DLibV::Representacion_primitiva_caja ccam{{200, 200, 100, 100}, DLibV::rgba8(255, 255, 255, 64)};
 	ccam.volcar(pantalla);
 
 	DLibV::Representacion_primitiva_caja_lineas ccam2{{camara.acc_x(), camara.acc_y(), 100, 100}, DLibV::rgba8(255, 255, 255, 64)};
-	ccam2.establecer_alpha(64);
 	ccam2.volcar(pantalla);
-
-	DLibV::Representacion_primitiva_caja_lineas ccam3{{0, 0, 3, 300}, DLibV::rgba8(255, 255, 255, 64)};
-	ccam3.establecer_alpha(64);
-	ccam3.volcar(pantalla);
-
-
-	DLibV::Representacion_primitiva_caja_lineas ccam4{{1, 300, 3, 150}, DLibV::rgba8(255, 255, 255, 64)};
-	ccam4.establecer_alpha(64);
-	ccam4.volcar(pantalla);
-
 
 	//These are all the representations currently in use.
 	bmp(pantalla, x); x+=40;
@@ -114,7 +102,6 @@ void Controlador_principal::bmp_patron(DLibV::Pantalla& pantalla, int x)
 	r.volcar(pantalla, camara);
 }
 
-
 void Controlador_principal::bmp_alpha(DLibV::Pantalla& pantalla, int x)
 {
 	DLibV::Representacion_bitmap r(DLibV::Gestor_texturas::obtener(g_lens_flare));
@@ -161,28 +148,28 @@ void Controlador_principal::caja_rellena(DLibV::Pantalla& pantalla, int x)
 
 void Controlador_principal::linea(DLibV::Pantalla& pantalla, int x)
 {
-	DLibV::Representacion_primitiva_linea r(x, 32, x+32, 64, 255, 64, 64);
+	DLibV::Representacion_primitiva_linea r(x, 32, x+32, 64, DLibV::rgba8(255, 64, 64, 255));
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
 
 void Controlador_principal::poligono(DLibV::Pantalla& pantalla, int x)
 {
-	DLibV::Representacion_primitiva_poligono_lineas r{ {{x, 32},{x+16,40},{x+32,32},{x+16,64}}, 255, 64, 64};
+	DLibV::Representacion_primitiva_poligono_lineas r{ {{x, 32},{x+16,40},{x+32,32},{x+16,64}}, DLibV::rgba8(255, 64, 64, 255)};
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
 
 void Controlador_principal::poligono_relleno(DLibV::Pantalla& pantalla, int x)
 {
-	DLibV::Representacion_primitiva_poligono r{ {{x, 40},{x+16,32},{x+32,40},{x+16,64}}, 255, 64, 64};
+	DLibV::Representacion_primitiva_poligono r{ {{x, 40},{x+16,32},{x+32,40},{x+16,64}}, DLibV::rgba8(255, 64, 64, 255)};
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
 
 void Controlador_principal::puntos(DLibV::Pantalla& pantalla, int x)
 {
-	DLibV::Representacion_primitiva_puntos r(255, 32, 32);
+	DLibV::Representacion_primitiva_puntos r(DLibV::rgba8(255, 64, 64, 255));
 	r.insertar(x, 32);
 	r.insertar(x+32, 32);
 	r.insertar(x+32, 64);
@@ -211,10 +198,10 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 	r3->ir_a(0, 64);
 
 	DLibV::Representacion_primitiva_caja * r4=new DLibV::Representacion_primitiva_caja{{32, 64, 32, 32}, DLibV::rgba8(255, 255, 255, 64)};
-	DLibV::Representacion_primitiva_linea * r5=new DLibV::Representacion_primitiva_linea(0, 96, 32, 128, 255, 64, 64);
-	DLibV::Representacion_primitiva_poligono * r6=new DLibV::Representacion_primitiva_poligono{ {{0, 128},{16,140},{32,128},{16,160}}, 255, 64, 64};
+	DLibV::Representacion_primitiva_linea * r5=new DLibV::Representacion_primitiva_linea(0, 96, 32, 128, DLibV::rgba8(255, 64, 64, 255));
+	DLibV::Representacion_primitiva_poligono * r6=new DLibV::Representacion_primitiva_poligono{ {{0, 128},{16,140},{32,128},{16,160}}, DLibV::rgba8(255, 64, 64, 255)};
 
-	DLibV::Representacion_primitiva_puntos * r7=new DLibV::Representacion_primitiva_puntos(255, 32, 32);
+	DLibV::Representacion_primitiva_puntos * r7=new DLibV::Representacion_primitiva_puntos(DLibV::rgba8(255, 64, 64, 255));
 	r7->insertar(0, 160);
 	r7->insertar(32, 160);
 	r7->insertar(32, 170);
