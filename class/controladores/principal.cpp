@@ -51,6 +51,16 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	ccam2.establecer_alpha(64);
 	ccam2.volcar(pantalla);
 
+	DLibV::Representacion_primitiva_caja_lineas ccam3{{0, 0, 3, 300}, DLibV::rgba8(255, 255, 255, 64)};
+	ccam3.establecer_alpha(64);
+	ccam3.volcar(pantalla);
+
+
+	DLibV::Representacion_primitiva_caja_lineas ccam4{{1, 300, 3, 150}, DLibV::rgba8(255, 255, 255, 64)};
+	ccam4.establecer_alpha(64);
+	ccam4.volcar(pantalla);
+
+
 	//These are all the representations currently in use.
 	bmp(pantalla, x); x+=40;
 	bmp_escalado(pantalla, x); x+=70;
