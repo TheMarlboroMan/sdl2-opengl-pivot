@@ -43,7 +43,7 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	pantalla.limpiar(DLibV::rgba8(64, 64, 64, 255));
 	int x=0;
 
-	DLibV::Representacion_primitiva_caja ccam{{200, 200, 100, 100}, DLibV::rgba8(255, 255, 255, 64)};
+	DLibV::Representacion_primitiva_caja_lineas ccam{{200, 200, 100, 100}, DLibV::rgba8(255, 255, 255, 64)};
 	ccam.establecer_alpha(64);
 	ccam.volcar(pantalla);
 
@@ -165,7 +165,7 @@ void Controlador_principal::poligono(DLibV::Pantalla& pantalla, int x)
 
 void Controlador_principal::poligono_relleno(DLibV::Pantalla& pantalla, int x)
 {
-	DLibV::Representacion_primitiva_poligono r{ {{x, 32},{x+16,40},{x+32,32},{x+16,64}}, 255, 64, 64};
+	DLibV::Representacion_primitiva_poligono r{ {{x, 40},{x+16,32},{x+32,40},{x+16,64}}, 255, 64, 64};
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
