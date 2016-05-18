@@ -10,13 +10,36 @@ using namespace App;
 Controlador_principal::Controlador_principal(DLibH::Log_base& log, const Herramientas_proyecto::Gestor_fuentes_TTF& f)
 	:log(log),
 	fuente(f.obtener_fuente("akashi", 20)),
-	camara(0,0,100,100,200,200)
+	camara(0,0,100,100,200,200), id_tex(0), id_tex2(0), id_tex3(0)
 {
+	load_crap(id_tex, "data/graficos/lens_flare.png");
+	load_crap(id_tex2, "data/graficos/fondo.bmp");
+	load_crap(id_tex3, "data/graficos/sprites.png");
+}
+
+void Controlador_principal::load_crap(GLuint& t, const std::string& r)
+{
+        SDL_Surface * superficie=IMG_Load(r.c_str());
+	if(!superficie)
+	{
+		throw std::runtime_error("FUUUCK 2"+r);
+	}
+
+	glGenTextures(1, &t);
+	glBindTexture(GL_TEXTURE_2D, t);
+
+	int mode=GL_RGB;
+ 	if(superficie->format->BytesPerPixel==4) mode=GL_RGBA;
+	glTexImage2D(GL_TEXTURE_2D, 0, mode, superficie->w, superficie->h, 0, mode, GL_UNSIGNED_BYTE, superficie->pixels);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+ 
+	SDL_FreeSurface(superficie);
 }
 
 void Controlador_principal::preloop(DFramework::Input& input, float delta)
 {
-
+	
 }
 
 void Controlador_principal::loop(DFramework::Input& input, float delta)
@@ -72,6 +95,73 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	puntos(pantalla, x); x+=40;
 	//TODO: Add vector insert.
 	compuesta(pantalla, x);
+
+
+
+	std::vector<DLibV::Representacion_primitiva::punto> pt{ {100, 100},
+		{250, 100}, 
+		{250, 250}, 
+		{100, 250}};
+
+	std::vector<DLibV::Representacion_primitiva::punto> pt2{ {350, 100},
+		{650, 100}, 
+		{450, 250}, 
+		{350, 250}};
+
+	std::vector<DLibV::Representacion_primitiva::punto> pt3{ {350, 300},
+		{650, 300}, 
+		{450, 350}, 
+		{350, 350}};
+
+	GLfloat ptex[]={0.f, 0.f,
+			1.f, 0.f, 
+			1.f, 1.f, 
+			0.f, 1.f};
+
+	GLfloat ptex2[]={0.f, 0.f,
+			1.f, 0.f, 
+			1.f, 1.f, 
+			0.f, 1.f};
+
+	GLfloat ptex3[]={0.f, 0.f,
+			1.f/8.f, 0.f, 
+			1.f/8.f, 1.f/8.f, 
+			0.f, 1.f/8.f};
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	
+	glColor4f(1.f, 1.f, 1.f, 1.f);
+	glEnable(GL_BLEND);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	glBindTexture(GL_TEXTURE_2D, id_tex);
+	glEnable(GL_TEXTURE_2D);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
+
+		glVertexPointer(2, GL_INT, 0, pt.data());
+		glTexCoordPointer(2, GL_FLOAT, 0, ptex);
+		glDrawArrays(GL_QUADS, 0, 4);
+
+	glBindTexture(GL_TEXTURE_2D, id_tex2);
+
+		glVertexPointer(2, GL_INT, 0, pt2.data());
+		glTexCoordPointer(2, GL_FLOAT, 0, ptex2);
+		glDrawArrays(GL_QUADS, 0, 4);
+
+	glBindTexture(GL_TEXTURE_2D, id_tex3);
+
+		glVertexPointer(2, GL_INT, 0, pt3.data());
+		glTexCoordPointer(2, GL_FLOAT, 0, ptex3);
+		glDrawArrays(GL_QUADS, 0, 4);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
+
+	glDisable(GL_TEXTURE_2D);
+
 }
 
 void Controlador_principal::bmp(DLibV::Pantalla& pantalla, int x)

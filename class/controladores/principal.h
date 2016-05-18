@@ -48,6 +48,9 @@ class Controlador_principal:
 	const DLibV::Fuente_TTF&		fuente;
 
 	DLibV::Camara				camara;
+	GLuint					id_tex, id_tex2, id_tex3;
+
+	void load_crap(GLuint&, const std::string&);
 };
 
 }
