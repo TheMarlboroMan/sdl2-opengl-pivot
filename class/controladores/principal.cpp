@@ -15,6 +15,7 @@ Controlador_principal::Controlador_principal(DLibH::Log_base& log, const Herrami
 	load_crap(id_tex, "data/graficos/lens_flare.png");
 	load_crap(id_tex2, "data/graficos/fondo.bmp");
 	load_crap(id_tex3, "data/graficos/sprites.png");
+	std::cout<<id_tex<<","<<id_tex2<<","<<id_tex3<<std::endl;
 }
 
 void Controlador_principal::load_crap(GLuint& t, const std::string& r)

@@ -1,5 +1,5 @@
-#ifndef Cargador_recursos_H
-#define Cargador_recursos_H
+#ifndef CARGADOR_RECURSOS_H
+#define CARGADOR_RECURSOS_H
 
 /*Un cargador de recursos gráficos y de audio. Para cargar los recursos usa
 ficheros en disco, localizados en las rutas de turno. Tiene un rollo autoload,
