@@ -72,23 +72,18 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	//TODO: Fix clipping.
 	bmp_rotar(pantalla, x); x+=40;
 	bmp_alpha(pantalla, x); x+=64;
-	//TODO: Remove SDL_Color dependency. Normalize color params and alpha.
-//		ttf(pantalla, x); x+=80;
-	//TODO: Normalize color params and alpha.
+	ttf(pantalla, x); x+=80;
 	caja(pantalla, x, 255); x+=40;
 	caja(pantalla, x, 128); x+=40;
 	caja_rellena(pantalla, x, 255); x+=40;
 	caja_rellena(pantalla, x, 128); x+=40;
-	//TODO: Normalize color params and alpha
 	linea(pantalla, x, 255); x+=40;
 	linea(pantalla, x, 128); x+=40;
-	//TODO: Normalize color params and alpha
 	//TODO: Fix camera problem.
 	poligono(pantalla, x, 128); x+=40;
 	poligono(pantalla, x, 255); x+=40;
 	poligono_relleno(pantalla, x, 255); x+=40;
 	poligono_relleno(pantalla, x, 128); x+=40;
-	//TODO: Normalize color params and alpha
 	//TODO: Add vector constructor and insert.
 	puntos(pantalla, x, 255); x+=40;
 	puntos(pantalla, x, 128); x+=40;
@@ -172,11 +167,10 @@ void Controlador_principal::bmp_rotar(DLibV::Pantalla& pantalla, int x)
 
 void Controlador_principal::ttf(DLibV::Pantalla& pantalla, int x)
 {
-	DLibV::Representacion_TTF r(fuente, SDL_Color{255, 255, 255, 255}, "Hola");
+	DLibV::Representacion_TTF r(fuente, DLibV::rgba8(255, 255, 255, 255), "Hola");
 	r.ir_a(x, 32);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
-
 }
 
 void Controlador_principal::caja(DLibV::Pantalla& pantalla, int x, int alpha)
@@ -247,7 +241,7 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 	r2->establecer_recorte(32,0,32,32);
 	r2->establecer_posicion(32, 32, 64, 64);
 
-	DLibV::Representacion_TTF * r3=new DLibV::Representacion_TTF(fuente, SDL_Color{255, 255, 255, 255}, "Hola");
+	DLibV::Representacion_TTF * r3=new DLibV::Representacion_TTF(fuente, DLibV::rgba8(255, 255, 255, 255), "Hola");
 	r3->ir_a(0, 64);
 
 	DLibV::Representacion_primitiva_caja * r4=new DLibV::Representacion_primitiva_caja{{32, 64, 32, 32}, DLibV::rgba8(255, 255, 255, 64)};
