@@ -10,32 +10,10 @@ using namespace App;
 Controlador_principal::Controlador_principal(DLibH::Log_base& log, const Herramientas_proyecto::Gestor_fuentes_TTF& f)
 	:log(log),
 	fuente(f.obtener_fuente("akashi", 20)),
-	camara(0,0,100,100,200,200), id_tex(0), id_tex2(0), id_tex3(0)
+	interruptor(true), angulo(0),
+	camara(0,0,100,100,200,200)
 {
-	load_crap(id_tex, "data/graficos/lens_flare.png");
-	load_crap(id_tex2, "data/graficos/fondo.bmp");
-	load_crap(id_tex3, "data/graficos/sprites.png");
-	std::cout<<id_tex<<","<<id_tex2<<","<<id_tex3<<std::endl;
-}
 
-void Controlador_principal::load_crap(GLuint& t, const std::string& r)
-{
-        SDL_Surface * superficie=IMG_Load(r.c_str());
-	if(!superficie)
-	{
-		throw std::runtime_error("FUUUCK 2"+r);
-	}
-
-	glGenTextures(1, &t);
-	glBindTexture(GL_TEXTURE_2D, t);
-
-	int mode=GL_RGB;
- 	if(superficie->format->BytesPerPixel==4) mode=GL_RGBA;
-	glTexImage2D(GL_TEXTURE_2D, 0, mode, superficie->w, superficie->h, 0, mode, GL_UNSIGNED_BYTE, superficie->pixels);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
- 
-	SDL_FreeSurface(superficie);
 }
 
 void Controlador_principal::preloop(DFramework::Input& input, float delta)
@@ -51,10 +29,20 @@ void Controlador_principal::loop(DFramework::Input& input, float delta)
 		return;
 	}
 
+//	if(input.es_input_down(Input::espacio)) interruptor=!interruptor;
+
 	if(input.es_input_pulsado(Input::arriba)) camara.movimiento_relativo(0, -1);
 	if(input.es_input_pulsado(Input::abajo)) camara.movimiento_relativo(0, 1);
-	if(input.es_input_pulsado(Input::izquierda)) camara.movimiento_relativo(-1, 0);
-	if(input.es_input_pulsado(Input::derecha)) camara.movimiento_relativo(1, 0);	
+	if(input.es_input_pulsado(Input::izquierda)) 
+	{
+		camara.movimiento_relativo(-1, 0);
+		--angulo;
+	}
+	if(input.es_input_pulsado(Input::derecha)) 
+	{
+		camara.movimiento_relativo(1, 0);	
+		++angulo;
+	}
 }
 
 void Controlador_principal::postloop(DFramework::Input& input, float delta)
@@ -76,93 +64,36 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	//These are all the representations currently in use.
 	bmp(pantalla, x); x+=40;
 	bmp_escalado(pantalla, x); x+=70;
-	bmp_patron(pantalla, x); x+=70;
+//	bmp_flip(pantalla, x, 0); x+=40;
+	bmp_flip(pantalla, x, 1); x+=40;
+	bmp_flip(pantalla, x, 2); x+=40;
+	bmp_flip(pantalla, x, 3); x+=40;
+//		bmp_patron(pantalla, x); x+=70;
 	//TODO: Fix clipping.
-	bmp_rotar(pantalla, x); x+=64;
+	bmp_rotar(pantalla, x); x+=40;
 	bmp_alpha(pantalla, x); x+=64;
 	//TODO: Remove SDL_Color dependency. Normalize color params and alpha.
-	ttf(pantalla, x); x+=80;
+//		ttf(pantalla, x); x+=80;
 	//TODO: Normalize color params and alpha.
-	caja(pantalla, x); x+=40;
-	caja_rellena(pantalla, x); x+=40;
+	caja(pantalla, x, 255); x+=40;
+	caja(pantalla, x, 128); x+=40;
+	caja_rellena(pantalla, x, 255); x+=40;
+	caja_rellena(pantalla, x, 128); x+=40;
 	//TODO: Normalize color params and alpha
-	linea(pantalla, x); x+=40;
+	linea(pantalla, x, 255); x+=40;
+	linea(pantalla, x, 128); x+=40;
 	//TODO: Normalize color params and alpha
 	//TODO: Fix camera problem.
-	poligono(pantalla, x); x+=40;
-	poligono_relleno(pantalla, x); x+=40;
+	poligono(pantalla, x, 128); x+=40;
+	poligono(pantalla, x, 255); x+=40;
+	poligono_relleno(pantalla, x, 255); x+=40;
+	poligono_relleno(pantalla, x, 128); x+=40;
 	//TODO: Normalize color params and alpha
 	//TODO: Add vector constructor and insert.
-	puntos(pantalla, x); x+=40;
+	puntos(pantalla, x, 255); x+=40;
+	puntos(pantalla, x, 128); x+=40;
 	//TODO: Add vector insert.
-	compuesta(pantalla, x);
-
-
-
-	std::vector<DLibV::Representacion_primitiva::punto> pt{ {100, 100},
-		{250, 100}, 
-		{250, 250}, 
-		{100, 250}};
-
-	std::vector<DLibV::Representacion_primitiva::punto> pt2{ {350, 100},
-		{650, 100}, 
-		{450, 250}, 
-		{350, 250}};
-
-	std::vector<DLibV::Representacion_primitiva::punto> pt3{ {350, 300},
-		{650, 300}, 
-		{450, 350}, 
-		{350, 350}};
-
-	GLfloat ptex[]={0.f, 0.f,
-			1.f, 0.f, 
-			1.f, 1.f, 
-			0.f, 1.f};
-
-	GLfloat ptex2[]={0.f, 0.f,
-			1.f, 0.f, 
-			1.f, 1.f, 
-			0.f, 1.f};
-
-	GLfloat ptex3[]={0.f, 0.f,
-			1.f/8.f, 0.f, 
-			1.f/8.f, 1.f/8.f, 
-			0.f, 1.f/8.f};
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	
-	glColor4f(1.f, 1.f, 1.f, 1.f);
-	glEnable(GL_BLEND);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	glBindTexture(GL_TEXTURE_2D, id_tex);
-	glEnable(GL_TEXTURE_2D);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
-
-		glVertexPointer(2, GL_INT, 0, pt.data());
-		glTexCoordPointer(2, GL_FLOAT, 0, ptex);
-		glDrawArrays(GL_QUADS, 0, 4);
-
-	glBindTexture(GL_TEXTURE_2D, id_tex2);
-
-		glVertexPointer(2, GL_INT, 0, pt2.data());
-		glTexCoordPointer(2, GL_FLOAT, 0, ptex2);
-		glDrawArrays(GL_QUADS, 0, 4);
-
-	glBindTexture(GL_TEXTURE_2D, id_tex3);
-
-		glVertexPointer(2, GL_INT, 0, pt3.data());
-		glTexCoordPointer(2, GL_FLOAT, 0, ptex3);
-		glDrawArrays(GL_QUADS, 0, 4);
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY_EXT);
-
-	glDisable(GL_TEXTURE_2D);
-
+//		compuesta(pantalla, x);
 }
 
 void Controlador_principal::bmp(DLibV::Pantalla& pantalla, int x)
@@ -183,8 +114,28 @@ void Controlador_principal::bmp_escalado(DLibV::Pantalla& pantalla, int x)
 	r.volcar(pantalla, camara);
 }
 
+void Controlador_principal::bmp_flip(DLibV::Pantalla& pantalla, int x, int t)
+{
+	DLibV::Representacion_bitmap r(DLibV::Gestor_texturas::obtener(g_sprites));
+	r.establecer_recorte(0,32,32,32);
+	r.establecer_posicion(x, 32, 32, 32);
+
+	switch(t)
+	{
+		case 0: break;
+		case 1: r.transformar_invertir_horizontal(true); break;
+		case 2: r.transformar_invertir_vertical(true); break;
+		case 3: r.transformar_invertir_horizontal(true); 
+			r.transformar_invertir_vertical(true); break;
+	}
+
+	r.volcar(pantalla);
+	r.volcar(pantalla, camara);
+}
+
 void Controlador_principal::bmp_patron(DLibV::Pantalla& pantalla, int x)
 {
+	//TODO: Quizás pueda ser la misma clase con algo más
 	DLibV::Representacion_bitmap_patron r(DLibV::Gestor_texturas::obtener(g_sprites));
 	r.establecer_pincel({0, 0, 32, 32});
 	r.establecer_recorte(32,0,32,32);
@@ -197,8 +148,8 @@ void Controlador_principal::bmp_alpha(DLibV::Pantalla& pantalla, int x)
 {
 	DLibV::Representacion_bitmap r(DLibV::Gestor_texturas::obtener(g_lens_flare));
 	r.establecer_recorte(0,0,50,50);
-	r.establecer_modo_blend(DLibV::Representacion::BLEND_ALPHA);
-	r.establecer_alpha(255);
+	r.establecer_modo_blend(DLibV::Representacion::blends::BLEND_ALPHA);
+	r.establecer_alpha(64);
 	r.establecer_posicion(x, 32, 50, 50);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
@@ -208,7 +159,12 @@ void Controlador_principal::bmp_rotar(DLibV::Pantalla& pantalla, int x)
 {
 	DLibV::Representacion_bitmap r(DLibV::Gestor_texturas::obtener(g_sprites));
 	r.establecer_recorte(0,0,32,32);
-	r.transformar_rotar(45);
+
+	if(angulo)
+	{
+		r.transformar_rotar(angulo);
+		r.transformar_centro_rotacion(16, 16);
+	}
 	r.establecer_posicion(x, 32, 32, 32);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
@@ -223,44 +179,50 @@ void Controlador_principal::ttf(DLibV::Pantalla& pantalla, int x)
 
 }
 
-void Controlador_principal::caja(DLibV::Pantalla& pantalla, int x)
+void Controlador_principal::caja(DLibV::Pantalla& pantalla, int x, int alpha)
 {
-	DLibV::Representacion_primitiva_caja_lineas r{{x, 32, 32, 32}, DLibV::rgba8(255, 64, 64, 255)};
+	DLibV::Representacion_primitiva_caja_lineas r{{x, 32, 32, 32}, DLibV::rgba8(255, 0, 0, alpha)};
+	r.establecer_modo_blend(DLibV::Representacion::blends::BLEND_ALPHA);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
 
-void Controlador_principal::caja_rellena(DLibV::Pantalla& pantalla, int x)
+void Controlador_principal::caja_rellena(DLibV::Pantalla& pantalla, int x, int alpha)
 {
-	DLibV::Representacion_primitiva_caja r{{x, 32, 32, 32}, DLibV::rgba8(255, 64, 64, 255)};
+	DLibV::Representacion_primitiva_caja r{{x, 32, 32, 32}, DLibV::rgba8(255, 0, 0, alpha)};
+	r.establecer_modo_blend(DLibV::Representacion::blends::BLEND_ALPHA);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
 
-void Controlador_principal::linea(DLibV::Pantalla& pantalla, int x)
+void Controlador_principal::linea(DLibV::Pantalla& pantalla, int x, int alpha)
 {
-	DLibV::Representacion_primitiva_linea r(x, 32, x+32, 64, DLibV::rgba8(255, 64, 64, 255));
+	DLibV::Representacion_primitiva_linea r(x, 32, x+32, 64, DLibV::rgba8(255, 0, 0, alpha));
+	r.establecer_modo_blend(DLibV::Representacion::blends::BLEND_ALPHA);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
 
-void Controlador_principal::poligono(DLibV::Pantalla& pantalla, int x)
+void Controlador_principal::poligono(DLibV::Pantalla& pantalla, int x, int alpha)
 {
-	DLibV::Representacion_primitiva_poligono_lineas r{ {{x, 32},{x+16,40},{x+32,32},{x+16,64}}, DLibV::rgba8(255, 64, 64, 255)};
+	DLibV::Representacion_primitiva_poligono_lineas r{ {{x, 32},{x+16,40},{x+32,32},{x+16,64}}, DLibV::rgba8(255, 0, 0, alpha)};
+	r.establecer_modo_blend(DLibV::Representacion::blends::BLEND_ALPHA);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
 
-void Controlador_principal::poligono_relleno(DLibV::Pantalla& pantalla, int x)
+void Controlador_principal::poligono_relleno(DLibV::Pantalla& pantalla, int x, int alpha)
 {
-	DLibV::Representacion_primitiva_poligono r{ {{x, 40},{x+16,32},{x+32,40},{x+16,64}}, DLibV::rgba8(255, 64, 64, 255)};
+	DLibV::Representacion_primitiva_poligono r{ {{x, 40},{x+16,32},{x+32,40},{x+16,64}}, DLibV::rgba8(255, 0, 0, alpha)};
+	r.establecer_modo_blend(DLibV::Representacion::blends::BLEND_ALPHA);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
 
-void Controlador_principal::puntos(DLibV::Pantalla& pantalla, int x)
+void Controlador_principal::puntos(DLibV::Pantalla& pantalla, int x, int alpha)
 {
-	DLibV::Representacion_primitiva_puntos r(DLibV::rgba8(255, 64, 64, 255));
+	DLibV::Representacion_primitiva_puntos r(DLibV::rgba8(255, 0, 0, alpha));
+	r.establecer_modo_blend(DLibV::Representacion::blends::BLEND_ALPHA);
 	r.insertar(x, 32);
 	r.insertar(x+32, 32);
 	r.insertar(x+32, 64);

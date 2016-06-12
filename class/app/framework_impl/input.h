@@ -12,7 +12,8 @@ escape=0,
 arriba,
 abajo,
 izquierda,
-derecha
+derecha,
+espacio
 };
 
 };

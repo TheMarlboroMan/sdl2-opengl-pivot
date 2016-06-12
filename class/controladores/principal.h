@@ -33,24 +33,25 @@ class Controlador_principal:
 	void					bmp(DLibV::Pantalla& pantalla, int x);
 	void					bmp_escalado(DLibV::Pantalla& pantalla, int x);
 	void					bmp_alpha(DLibV::Pantalla& pantalla, int x);
+	void					bmp_flip(DLibV::Pantalla& pantalla, int x, int t);
 	void					bmp_rotar(DLibV::Pantalla& pantalla, int x);
 	void					bmp_patron(DLibV::Pantalla& pantalla, int x);
 	void					ttf(DLibV::Pantalla& pantalla, int x);
-	void					caja(DLibV::Pantalla& pantalla, int x);
-	void					caja_rellena(DLibV::Pantalla& pantalla, int x);
-	void					linea(DLibV::Pantalla& pantalla, int x);
-	void					poligono(DLibV::Pantalla& pantalla, int x);
-	void					poligono_relleno(DLibV::Pantalla& pantalla, int x);
-	void					puntos(DLibV::Pantalla& pantalla, int x);
+	void					caja(DLibV::Pantalla& pantalla, int x, int alpha);
+	void					caja_rellena(DLibV::Pantalla& pantalla, int x, int alpha);
+	void					linea(DLibV::Pantalla& pantalla, int x, int alpha);
+	void					poligono(DLibV::Pantalla& pantalla, int x, int alpha);
+	void					poligono_relleno(DLibV::Pantalla& pantalla, int x, int alpha);
+	void					puntos(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					compuesta(DLibV::Pantalla& pantalla, int x);
 
 	DLibH::Log_base&			log;
 	const DLibV::Fuente_TTF&		fuente;
 
-	DLibV::Camara				camara;
-	GLuint					id_tex, id_tex2, id_tex3;
+	bool					interruptor;
+	int					angulo;
 
-	void load_crap(GLuint&, const std::string&);
+	DLibV::Camara				camara;
 };
 
 }

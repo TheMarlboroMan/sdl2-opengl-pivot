@@ -12,7 +12,10 @@ config:{
 			0, 0, 79
 		], izquierda:[
 			0, 0, 80
+		], espacio:[
+			0, 0, 80
 		]
+
 	}, meta:{
 		v:1
 	}, video:{

@@ -53,6 +53,7 @@ class App_config:
 	input_jugador acc_derecha() const 	{return token_por_ruta_input("derecha");}
 	input_jugador acc_arriba() const 	{return token_por_ruta_input("arriba");}
 	input_jugador acc_abajo() const		{return token_por_ruta_input("abajo");}
+	input_jugador acc_espacio() const	{return token_por_ruta_input("espacio");}
 
 	void mut_w_logica_pantalla(int p_valor) {configurar(CLAVE_W_LOGICA_PANTALLA, p_valor);}
 	void mut_h_logica_pantalla(int p_valor) {configurar(CLAVE_H_LOGICA_PANTALLA, p_valor);}

@@ -1,3 +1,4 @@
-#indice	ruta	transparencia	rtrans	gtrans	btrans
-1	data/graficos/sprites.png	1	0	255	255
-2	data/graficos/lens_flare.png	0	0	0	0
+#indice	ruta	transparencia
+1	data/graficos/sprites.png
+2	data/graficos/lens_flare.png
+3	data/graficos/fondo.bmp
