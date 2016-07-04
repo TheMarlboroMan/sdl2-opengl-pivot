@@ -53,6 +53,9 @@ void Controlador_principal::postloop(DFramework::Input& input, float delta)
 void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 {
 	pantalla.limpiar(DLibV::rgba8(64, 64, 64, 255));
+
+	pantalla.do_stencil_test();
+/*
 	int x=0;
 
 	DLibV::Representacion_primitiva_caja ccam{{200, 200, 100, 100}, DLibV::rgba8(255, 255, 255, 64)};
@@ -89,6 +92,8 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	puntos(pantalla, x, 128); x+=40;
 	//TODO: Add vector insert.
 //	compuesta(pantalla, x);
+*/
+	pantalla.end_stencil_test();
 }
 
 void Controlador_principal::bmp(DLibV::Pantalla& pantalla, int x)
