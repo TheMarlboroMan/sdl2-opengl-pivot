@@ -40,7 +40,7 @@ void Controlador_principal::loop(DFramework::Input& input, float delta)
 	}
 	if(input.es_input_pulsado(Input::derecha)) 
 	{
-		camara.movimiento_relativo(1, 0);	
+		camara.movimiento_relativo(1, 0);
 		++angulo;
 	}
 }
@@ -62,19 +62,19 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	ccam2.volcar(pantalla);
 
 	//These are all the representations currently in use.
+
 	bmp(pantalla, x); x+=40;
 	bmp_escalado(pantalla, x); x+=70;
-//	bmp_flip(pantalla, x, 0); x+=40;
 	bmp_flip(pantalla, x, 1); x+=40;
 	bmp_flip(pantalla, x, 2); x+=40;
 	bmp_flip(pantalla, x, 3); x+=40;
-//		bmp_patron(pantalla, x); x+=70;
+	bmp_patron(pantalla, x); x+=70;
 	//TODO: Fix clipping.
 	bmp_rotar(pantalla, x); x+=40;
 	bmp_alpha(pantalla, x); x+=64;
 	ttf(pantalla, x); x+=80;
-	caja(pantalla, x, 255); x+=40;
 	caja(pantalla, x, 128); x+=40;
+	caja(pantalla, x, 255); x+=40;
 	caja_rellena(pantalla, x, 255); x+=40;
 	caja_rellena(pantalla, x, 128); x+=40;
 	linea(pantalla, x, 255); x+=40;
@@ -88,7 +88,7 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	puntos(pantalla, x, 255); x+=40;
 	puntos(pantalla, x, 128); x+=40;
 	//TODO: Add vector insert.
-//		compuesta(pantalla, x);
+//	compuesta(pantalla, x);
 }
 
 void Controlador_principal::bmp(DLibV::Pantalla& pantalla, int x)
@@ -130,11 +130,10 @@ void Controlador_principal::bmp_flip(DLibV::Pantalla& pantalla, int x, int t)
 
 void Controlador_principal::bmp_patron(DLibV::Pantalla& pantalla, int x)
 {
-	//TODO: Quizás pueda ser la misma clase con algo más
-	DLibV::Representacion_bitmap_patron r(DLibV::Gestor_texturas::obtener(g_sprites));
-	r.establecer_pincel({0, 0, 32, 32});
-	r.establecer_recorte(32,0,32,32);
-	r.establecer_posicion(x, 32, 64, 64);
+	DLibV::Representacion_bitmap r(DLibV::Gestor_texturas::obtener(g_sprites));
+	r.establecer_recorte(0,0,32,32);
+	r.establecer_posicion(x, 32, 32, 32);
+	r.establecer_pincel(10, 20);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
@@ -236,8 +235,8 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 	r1->establecer_recorte(0,0,32,32);
 	r1->establecer_posicion(0, 32, 32, 32);
 
-	DLibV::Representacion_bitmap_patron * r2=new DLibV::Representacion_bitmap_patron(DLibV::Gestor_texturas::obtener(g_sprites));
-	r2->establecer_pincel({0, 0, 32, 32});
+	DLibV::Representacion_bitmap * r2=new DLibV::Representacion_bitmap(DLibV::Gestor_texturas::obtener(g_sprites));
+	r2->establecer_pincel(16, 32);
 	r2->establecer_recorte(32,0,32,32);
 	r2->establecer_posicion(32, 32, 64, 64);
 
