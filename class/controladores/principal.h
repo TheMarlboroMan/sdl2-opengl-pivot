@@ -41,6 +41,7 @@ class Controlador_principal:
 	void					caja_rellena(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					linea(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					poligono(DLibV::Pantalla& pantalla, int x, int alpha);
+	void					poligono_rotado(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					poligono_relleno(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					puntos(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					compuesta(DLibV::Pantalla& pantalla, int x);

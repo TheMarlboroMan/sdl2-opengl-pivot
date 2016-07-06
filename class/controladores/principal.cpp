@@ -11,7 +11,7 @@ Controlador_principal::Controlador_principal(DLibH::Log_base& log, const Herrami
 	:log(log),
 	fuente(f.obtener_fuente("akashi", 20)),
 	interruptor(true), angulo(0),
-	camara(0,0,100,100,200,200)
+	camara(0,0,100,100,128,128)
 {
 
 }
@@ -54,18 +54,15 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 {
 	pantalla.limpiar(DLibV::rgba8(64, 64, 64, 255));
 
-	pantalla.do_stencil_test();
+	int x=32;
 
-	int x=0;
-
-	DLibV::Representacion_primitiva_caja ccam{{200, 200, 100, 100}, DLibV::rgba8(255, 255, 255, 64)};
+	DLibV::Representacion_primitiva_caja_lineas ccam{{128, 128, 100, 100}, DLibV::rgba8(255, 255, 255, 12)};
 	ccam.volcar(pantalla);
 
 	DLibV::Representacion_primitiva_caja_lineas ccam2{{camara.acc_x(), camara.acc_y(), 100, 100}, DLibV::rgba8(255, 255, 255, 64)};
 	ccam2.volcar(pantalla);
 
 	//These are all the representations currently in use.
-
 	bmp(pantalla, x); x+=40;
 	bmp_escalado(pantalla, x); x+=70;
 	bmp_flip(pantalla, x, 1); x+=40;
@@ -73,6 +70,8 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	bmp_flip(pantalla, x, 3); x+=40;
 	bmp_patron(pantalla, x); x+=70;
 	//TODO: Fix clipping.
+
+			bmp(pantalla, x);
 	bmp_rotar(pantalla, x); x+=40;
 	bmp_alpha(pantalla, x); x+=64;
 	ttf(pantalla, x); x+=80;
@@ -85,6 +84,7 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	//TODO: Fix camera problem.
 	poligono(pantalla, x, 128); x+=40;
 	poligono(pantalla, x, 255); x+=40;
+	poligono_rotado(pantalla, x, 128); x+=40;
 	poligono_relleno(pantalla, x, 255); x+=40;
 	poligono_relleno(pantalla, x, 128); x+=40;
 	//TODO: Add vector constructor and insert.
@@ -92,8 +92,6 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	puntos(pantalla, x, 128); x+=40;
 	//TODO: Add vector insert.
 //	compuesta(pantalla, x);
-
-	pantalla.end_stencil_test();
 }
 
 void Controlador_principal::bmp(DLibV::Pantalla& pantalla, int x)
@@ -205,6 +203,21 @@ void Controlador_principal::poligono(DLibV::Pantalla& pantalla, int x, int alpha
 {
 	DLibV::Representacion_primitiva_poligono_lineas r{ {{x, 32},{x+16,40},{x+32,32},{x+16,64}}, DLibV::rgba8(255, 0, 0, alpha)};
 	r.establecer_modo_blend(DLibV::Representacion::blends::BLEND_ALPHA);
+	r.volcar(pantalla);
+	r.volcar(pantalla, camara);
+}
+
+void Controlador_principal::poligono_rotado(DLibV::Pantalla& pantalla, int x, int alpha)
+{
+	DLibV::Representacion_primitiva_poligono_lineas r{ {{x, 32},{x+16,40},{x+32,32},{x+16,64}}, DLibV::rgba8(255, 0, 0, alpha)};
+	r.establecer_modo_blend(DLibV::Representacion::blends::BLEND_ALPHA);
+
+	if(angulo)
+	{
+		r.transformar_rotar(angulo);
+		r.transformar_centro_rotacion(16, 16);
+	}
+
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
