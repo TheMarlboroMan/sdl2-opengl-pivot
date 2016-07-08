@@ -13,12 +13,15 @@ config:{
 		], izquierda:[
 			0, 0, 80
 		], espacio:[
-			0, 0, 80
+			0, 0, 44
+		], zoom_mas:[
+			0, 0, 86
+		], zoom_menos:[
+			0, 0, 87
 		]
-
 	}, meta:{
 		v:1
 	}, video:{
-		doble_buffer:1, h_fisica_ventana:500, h_logica_ventana:500, modo_hardware:1, modo_pantalla:0, pantalla_anyformat:1, w_fisica_ventana:1200, w_logica_ventana:1200
+		doble_buffer:1, h_fisica_ventana:1000, h_logica_ventana:1000, modo_hardware:1, modo_pantalla:0, pantalla_anyformat:1, w_fisica_ventana:1200, w_logica_ventana:1200
 	}
 }

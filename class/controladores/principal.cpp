@@ -11,7 +11,7 @@ Controlador_principal::Controlador_principal(DLibH::Log_base& log, const Herrami
 	:log(log),
 	fuente(f.obtener_fuente("akashi", 20)),
 	interruptor(true), angulo(0),
-	camara(0,0,100,100,128,128)
+	camara(0,0,300,150,300,200)
 {
 
 }
@@ -29,19 +29,32 @@ void Controlador_principal::loop(DFramework::Input& input, float delta)
 		return;
 	}
 
-//	if(input.es_input_down(Input::espacio)) interruptor=!interruptor;
+	if(input.es_input_down(Input::espacio)) 
+	{
+		camara.mut_zoom(1.0);
+	}
 
 	if(input.es_input_pulsado(Input::arriba)) camara.movimiento_relativo(0, -1);
-	if(input.es_input_pulsado(Input::abajo)) camara.movimiento_relativo(0, 1);
+	else if(input.es_input_pulsado(Input::abajo)) camara.movimiento_relativo(0, 1);
+
 	if(input.es_input_pulsado(Input::izquierda)) 
 	{
 		camara.movimiento_relativo(-1, 0);
 		--angulo;
 	}
-	if(input.es_input_pulsado(Input::derecha)) 
+	else if(input.es_input_pulsado(Input::derecha)) 
 	{
 		camara.movimiento_relativo(1, 0);
 		++angulo;
+	}
+
+	else if(input.es_input_pulsado(Input::zoom_mas))
+	{
+		camara.mut_zoom(camara.acc_zoom()+0.01);
+	}
+	else if(input.es_input_pulsado(Input::zoom_menos))
+	{
+		camara.mut_zoom(camara.acc_zoom()-0.01);
 	}
 }
 
@@ -54,12 +67,14 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 {
 	pantalla.limpiar(DLibV::rgba8(64, 64, 64, 255));
 
-	int x=32;
+	int x=0;
 
-	DLibV::Representacion_primitiva_caja_lineas ccam{{128, 128, 100, 100}, DLibV::rgba8(255, 255, 255, 12)};
+	//Posición real de la cámara
+	DLibV::Representacion_primitiva_caja_lineas ccam{{(int)camara.acc_pos_x(), (int)camara.acc_pos_y(), (unsigned int)camara.acc_pos_w(), (unsigned int)camara.acc_pos_h()}, DLibV::rgba8(255, 255, 255, 12)};
 	ccam.volcar(pantalla);
 
-	DLibV::Representacion_primitiva_caja_lineas ccam2{{camara.acc_x(), camara.acc_y(), 100, 100}, DLibV::rgba8(255, 255, 255, 64)};
+	//Cuadro móvil a dónde enfoca...
+	DLibV::Representacion_primitiva_caja_lineas ccam2{{(int)camara.acc_x(), (int)camara.acc_y(), (unsigned int)camara.acc_foco_w(), (unsigned int)camara.acc_foco_h()}, DLibV::rgba8(255, 255, 255, 64)};
 	ccam2.volcar(pantalla);
 
 	//These are all the representations currently in use.
@@ -69,9 +84,6 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	bmp_flip(pantalla, x, 2); x+=40;
 	bmp_flip(pantalla, x, 3); x+=40;
 	bmp_patron(pantalla, x); x+=70;
-	//TODO: Fix clipping.
-
-			bmp(pantalla, x);
 	bmp_rotar(pantalla, x); x+=40;
 	bmp_alpha(pantalla, x); x+=64;
 	ttf(pantalla, x); x+=80;
@@ -81,7 +93,6 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	caja_rellena(pantalla, x, 128); x+=40;
 	linea(pantalla, x, 255); x+=40;
 	linea(pantalla, x, 128); x+=40;
-	//TODO: Fix camera problem.
 	poligono(pantalla, x, 128); x+=40;
 	poligono(pantalla, x, 255); x+=40;
 	poligono_rotado(pantalla, x, 128); x+=40;
@@ -162,14 +173,14 @@ void Controlador_principal::bmp_rotar(DLibV::Pantalla& pantalla, int x)
 		r.transformar_rotar(angulo);
 		r.transformar_centro_rotacion(16, 16);
 	}
-	r.establecer_posicion(x, 32, 32, 32);
+	r.establecer_posicion(x, 32, 128, 32);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
 
 void Controlador_principal::ttf(DLibV::Pantalla& pantalla, int x)
 {
-	DLibV::Representacion_TTF r(fuente, DLibV::rgba8(255, 255, 255, 255), "Hola");
+	DLibV::Representacion_TTF r(fuente, DLibV::rgba8(255, 255, 255, 255), "Hola "+std::to_string(camara.acc_zoom()));
 	r.ir_a(x, 32);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);

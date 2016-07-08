@@ -13,7 +13,9 @@ arriba,
 abajo,
 izquierda,
 derecha,
-espacio
+espacio,
+zoom_mas,
+zoom_menos
 };
 
 };
