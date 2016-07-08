@@ -40,10 +40,12 @@ class Controlador_principal:
 	void					caja(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					caja_rellena(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					linea(DLibV::Pantalla& pantalla, int x, int alpha);
+	void					linea_rotar(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					poligono(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					poligono_rotado(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					poligono_relleno(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					puntos(DLibV::Pantalla& pantalla, int x, int alpha);
+	void					puntos_rotar(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					compuesta(DLibV::Pantalla& pantalla, int x);
 
 	DLibH::Log_base&			log;
@@ -53,6 +55,9 @@ class Controlador_principal:
 	int					angulo;
 
 	DLibV::Camara				camara;
+	DLibV::Representacion_primitiva_caja_lineas caja_movil;
+	DLibV::Representacion_primitiva_puntos 	puntos_movil;
+	DLibV::Representacion_primitiva_linea 	linea_movil;
 };
 
 }

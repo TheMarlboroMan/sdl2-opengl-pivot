@@ -11,9 +11,15 @@ Controlador_principal::Controlador_principal(DLibH::Log_base& log, const Herrami
 	:log(log),
 	fuente(f.obtener_fuente("akashi", 20)),
 	interruptor(true), angulo(0),
-	camara(0,0,300,150,300,200)
+	camara(0,0,300,150,300,200),
+	caja_movil{ {0,0,6,6}, DLibV::rgba8(255, 0, 0, 255)},
+	puntos_movil(DLibV::rgba8(0, 255, 0, 255)),
+	linea_movil{0,0, 32, 32, DLibV::rgba8(0, 0, 255, 255)}
 {
-
+	puntos_movil.insertar(0, 32);
+	puntos_movil.insertar(0+32, 32);
+	puntos_movil.insertar(0+32, 64);
+	puntos_movil.insertar(0, 64);
 }
 
 void Controlador_principal::preloop(DFramework::Input& input, float delta)
@@ -77,6 +83,16 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	DLibV::Representacion_primitiva_caja_lineas ccam2{{(int)camara.acc_x(), (int)camara.acc_y(), (unsigned int)camara.acc_foco_w(), (unsigned int)camara.acc_foco_h()}, DLibV::rgba8(255, 255, 255, 64)};
 	ccam2.volcar(pantalla);
 
+	//Comprobaciones de ir_a.
+	caja_movil.ir_a(camara.acc_x(), camara.acc_y());
+	caja_movil.volcar(pantalla);
+
+	puntos_movil.ir_a(camara.acc_x()+camara.acc_foco_w(), camara.acc_y());
+	puntos_movil.volcar(pantalla);
+
+	linea_movil.ir_a(camara.acc_x(), camara.acc_y()+camara.acc_foco_h());
+	linea_movil.volcar(pantalla);
+
 	//These are all the representations currently in use.
 	bmp(pantalla, x); x+=40;
 	bmp_escalado(pantalla, x); x+=70;
@@ -91,8 +107,8 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	caja(pantalla, x, 255); x+=40;
 	caja_rellena(pantalla, x, 255); x+=40;
 	caja_rellena(pantalla, x, 128); x+=40;
-	linea(pantalla, x, 255); x+=40;
-	linea(pantalla, x, 128); x+=40;
+	linea(pantalla, x, 192); x+=40;
+	linea_rotar(pantalla, x, 255); x+=40;
 	poligono(pantalla, x, 128); x+=40;
 	poligono(pantalla, x, 255); x+=40;
 	poligono_rotado(pantalla, x, 128); x+=40;
@@ -100,7 +116,7 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	poligono_relleno(pantalla, x, 128); x+=40;
 	//TODO: Add vector constructor and insert.
 	puntos(pantalla, x, 255); x+=40;
-	puntos(pantalla, x, 128); x+=40;
+	puntos_rotar(pantalla, x, 128); x+=40;
 	//TODO: Add vector insert.
 //	compuesta(pantalla, x);
 }
@@ -210,6 +226,21 @@ void Controlador_principal::linea(DLibV::Pantalla& pantalla, int x, int alpha)
 	r.volcar(pantalla, camara);
 }
 
+void Controlador_principal::linea_rotar(DLibV::Pantalla& pantalla, int x, int alpha)
+{
+	DLibV::Representacion_primitiva_linea r(x, 32, x+32, 64, DLibV::rgba8(255, 0, 0, alpha));
+	r.establecer_modo_blend(DLibV::Representacion::blends::BLEND_ALPHA);
+
+	if(angulo)
+	{
+		r.transformar_rotar(angulo);
+		r.transformar_centro_rotacion(16, 16);
+	}
+
+	r.volcar(pantalla);
+	r.volcar(pantalla, camara);
+}
+
 void Controlador_principal::poligono(DLibV::Pantalla& pantalla, int x, int alpha)
 {
 	DLibV::Representacion_primitiva_poligono_lineas r{ {{x, 32},{x+16,40},{x+32,32},{x+16,64}}, DLibV::rgba8(255, 0, 0, alpha)};
@@ -254,8 +285,28 @@ void Controlador_principal::puntos(DLibV::Pantalla& pantalla, int x, int alpha)
 	r.volcar(pantalla, camara);
 }
 
+void Controlador_principal::puntos_rotar(DLibV::Pantalla& pantalla, int x, int alpha)
+{
+	DLibV::Representacion_primitiva_puntos r(DLibV::rgba8(255, 0, 0, alpha));
+	r.establecer_modo_blend(DLibV::Representacion::blends::BLEND_ALPHA);
+	r.insertar(x, 32);
+	r.insertar(x+32, 32);
+	r.insertar(x+32, 64);
+	r.insertar(x, 64);
+	
+	if(angulo)
+	{
+		r.transformar_rotar(angulo);
+		r.transformar_centro_rotacion(16, 16);
+	}
+
+	r.volcar(pantalla);
+	r.volcar(pantalla, camara);
+}
+
 void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 {
+/*
 	DLibV::Representacion_agrupada r(true);
 
 	DLibV::Representacion_bitmap * r1=new DLibV::Representacion_bitmap(DLibV::Gestor_texturas::obtener(g_sprites));
@@ -293,6 +344,7 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 	r.ir_a(x, 32);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
+*/
 }
 
 
