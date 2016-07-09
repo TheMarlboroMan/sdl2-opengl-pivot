@@ -52,7 +52,8 @@ class Controlador_principal:
 	const DLibV::Fuente_TTF&		fuente;
 
 	bool					interruptor;
-	int					angulo;
+	int					angulo,
+						alpha;
 
 	DLibV::Camara				camara;
 	DLibV::Representacion_primitiva_caja	caja_movil;

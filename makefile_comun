@@ -12,6 +12,7 @@ include _makefile_dependencias_main
 
 all: \
 $(DIR_O)dummy \
+$(DIR_LIBDAN2)/libDanSDL2.a\
 $(EJECUTABLE) \
 
 $(DIR_O)dummy:
