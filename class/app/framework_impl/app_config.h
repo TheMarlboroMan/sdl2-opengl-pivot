@@ -59,6 +59,8 @@ class App_config:
 	input_jugador acc_num_1() const	{return token_por_ruta_input("num_1");}
 	input_jugador acc_num_2() const	{return token_por_ruta_input("num_2");}
 	input_jugador acc_num_3() const	{return token_por_ruta_input("num_3");}
+	input_jugador acc_key_a() const	{return token_por_ruta_input("key_a");}
+	input_jugador acc_key_s() const	{return token_por_ruta_input("key_s");}
 
 	void mut_w_logica_pantalla(int p_valor) {configurar(CLAVE_W_LOGICA_PANTALLA, p_valor);}
 	void mut_h_logica_pantalla(int p_valor) {configurar(CLAVE_H_LOGICA_PANTALLA, p_valor);}

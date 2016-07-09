@@ -19,6 +19,8 @@ zoom_menos,
 num1,
 num2,
 num3,
+key_a,
+key_s
 };
 
 };

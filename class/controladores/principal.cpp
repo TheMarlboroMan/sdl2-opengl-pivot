@@ -10,8 +10,8 @@ using namespace App;
 Controlador_principal::Controlador_principal(DLibH::Log_base& log, const Herramientas_proyecto::Gestor_fuentes_TTF& f)
 	:log(log),
 	fuente(f.obtener_fuente("akashi", 20)),
-	interruptor(true), angulo(0),
-	camara(0,0,300,200,0,300),
+	interruptor(true), angulo(90),
+	camara(32,0,600,300,0,300),
 	caja_movil{DLibV::Representacion_primitiva_poligono::tipo::relleno, {0,0,6,6}, DLibV::rgba8(255, 0, 0, 255)},
 	puntos_movil(DLibV::rgba8(0, 255, 0, 255)),
 	linea_movil{0,0, 32, 32, DLibV::rgba8(0, 0, 255, 255)}
@@ -39,6 +39,7 @@ void Controlador_principal::loop(DFramework::Input& input, float delta)
 	{
 		camara.mut_zoom(1.0);
 		camara.enfocar_a(0, 0);
+		angulo=0;
 	}
 	else if(input.es_input_down(Input::num1)) camara.mut_zoom(1.0);
 	else if(input.es_input_down(Input::num2)) camara.mut_zoom(2.0);
@@ -47,25 +48,15 @@ void Controlador_principal::loop(DFramework::Input& input, float delta)
 	if(input.es_input_pulsado(Input::arriba)) camara.movimiento_relativo(0, -1);
 	else if(input.es_input_pulsado(Input::abajo)) camara.movimiento_relativo(0, 1);
 
-	if(input.es_input_pulsado(Input::izquierda)) 
-	{
-		camara.movimiento_relativo(-1, 0);
-		--angulo;
-	}
-	else if(input.es_input_pulsado(Input::derecha)) 
-	{
-		camara.movimiento_relativo(1, 0);
-		++angulo;
-	}
+	if(input.es_input_pulsado(Input::izquierda)) camara.movimiento_relativo(-1, 0);
+	else if(input.es_input_pulsado(Input::derecha)) camara.movimiento_relativo(1, 0);
 
-	else if(input.es_input_pulsado(Input::zoom_mas))
-	{
-		camara.mut_zoom(camara.acc_zoom()+0.01);
-	}
-	else if(input.es_input_pulsado(Input::zoom_menos))
-	{
-		camara.mut_zoom(camara.acc_zoom()-0.01);
-	}
+	if(input.es_input_pulsado(Input::key_a)) --angulo;
+	else if(input.es_input_pulsado(Input::key_s)) ++angulo;
+
+	if(input.es_input_pulsado(Input::zoom_mas)) camara.mut_zoom(camara.acc_zoom()+0.01);
+	else if(input.es_input_pulsado(Input::zoom_menos)) camara.mut_zoom(camara.acc_zoom()-0.01);
+
 }
 
 void Controlador_principal::postloop(DFramework::Input& input, float delta)
@@ -101,6 +92,7 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	compuesta(pantalla, x); x+=128;
 	bmp(pantalla, x); x+=40;
 	bmp_escalado(pantalla, x); x+=70;
+	compuesta(pantalla, x); x+=128;
 	bmp_flip(pantalla, x, 1); x+=40;
 	bmp_flip(pantalla, x, 2); x+=40;
 	bmp_flip(pantalla, x, 3); x+=40;
@@ -364,7 +356,7 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 	if(angulo)
 	{
 		r.transformar_rotar(angulo);
-		r.transformar_centro_rotacion(16, 16);
+		r.transformar_centro_rotacion(32, 32);
 	}
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
