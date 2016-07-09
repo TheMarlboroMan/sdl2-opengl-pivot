@@ -11,7 +11,7 @@ Controlador_principal::Controlador_principal(DLibH::Log_base& log, const Herrami
 	:log(log),
 	fuente(f.obtener_fuente("akashi", 20)),
 	interruptor(true), angulo(0),
-	camara(0,0,300,150,300,200),
+	camara(0,0,300,200,0,300),
 	caja_movil{DLibV::Representacion_primitiva_poligono::tipo::relleno, {0,0,6,6}, DLibV::rgba8(255, 0, 0, 255)},
 	puntos_movil(DLibV::rgba8(0, 255, 0, 255)),
 	linea_movil{0,0, 32, 32, DLibV::rgba8(0, 0, 255, 255)}
@@ -38,7 +38,11 @@ void Controlador_principal::loop(DFramework::Input& input, float delta)
 	if(input.es_input_down(Input::espacio)) 
 	{
 		camara.mut_zoom(1.0);
+		camara.enfocar_a(0, 0);
 	}
+	else if(input.es_input_down(Input::num1)) camara.mut_zoom(1.0);
+	else if(input.es_input_down(Input::num2)) camara.mut_zoom(2.0);
+	else if(input.es_input_down(Input::num3)) camara.mut_zoom(3.0);
 
 	if(input.es_input_pulsado(Input::arriba)) camara.movimiento_relativo(0, -1);
 	else if(input.es_input_pulsado(Input::abajo)) camara.movimiento_relativo(0, 1);
@@ -94,6 +98,7 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	linea_movil.volcar(pantalla);
 
 	//These are all the representations currently in use.
+	compuesta(pantalla, x); x+=128;
 	bmp(pantalla, x); x+=40;
 	bmp_escalado(pantalla, x); x+=70;
 	bmp_flip(pantalla, x, 1); x+=40;
@@ -103,21 +108,20 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	bmp_rotar(pantalla, x); x+=40;
 	bmp_alpha(pantalla, x); x+=64;
 	ttf(pantalla, x); x+=80;
-//	caja(pantalla, x, 128); x+=40;
+	caja(pantalla, x, 128); x+=40;
 	caja(pantalla, x, 255); x+=40;
-//	caja_rellena(pantalla, x, 255); x+=40;
+	caja_rellena(pantalla, x, 255); x+=40;
 	caja_rellena(pantalla, x, 128); x+=40;
 	linea(pantalla, x, 192); x+=40;
 	linea_rotar(pantalla, x, 255); x+=40;
 	poligono(pantalla, x, 128); x+=40;
-//	poligono(pantalla, x, 255); x+=40;
+	poligono(pantalla, x, 255); x+=40;
 	poligono_rotado(pantalla, x, 128); x+=40;
 	poligono_relleno(pantalla, x, 255); x+=40;
-
-//	poligono_relleno(pantalla, x, 128); x+=40;
+	poligono_relleno(pantalla, x, 128); x+=40;
 	puntos(pantalla, x, 255); x+=40;
 	puntos_rotar(pantalla, x, 128); x+=40;
-	compuesta(pantalla, x);
+	compuesta(pantalla, x); x+=128;
 }
 
 void Controlador_principal::bmp(DLibV::Pantalla& pantalla, int x)
@@ -308,9 +312,9 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 	DLibV::Representacion_agrupada r(x, 32, true);
 
 	DLibV::Representacion_bitmap * r1=new DLibV::Representacion_bitmap(DLibV::Gestor_texturas::obtener(g_sprites));
-	r1->establecer_alpha(128);
+	r1->establecer_alpha(64);
 //	r1->transformar_rotar(45);
-	r1->establecer_recorte(0,0,32,32);
+	r1->establecer_recorte(32,32,32,32);
 	r1->establecer_posicion(-32, 32, 32, 32);
 	r.insertar_representacion(r1);
 
@@ -320,7 +324,6 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 	r2->establecer_posicion(64, 32, 64, 64);
 	r.insertar_representacion(r2);
 
-	//TODO: Yeah... this doesn't work...
 	DLibV::Representacion_TTF * r3=new DLibV::Representacion_TTF(fuente, DLibV::rgba8(255, 255, 255, 255), "Hola");
 	r3->ir_a(0, 64);
 	r.insertar_representacion(r3);
@@ -334,14 +337,35 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 	DLibV::Representacion_primitiva_poligono * r6=new DLibV::Representacion_primitiva_poligono{DLibV::Representacion_primitiva_poligono::tipo::relleno, {{32, 0},{0,32},{32,32}}, DLibV::rgba8(255, 0, 0, 255)};
 	r.insertar_representacion(r6);
 
+/*
 	DLibV::Representacion_primitiva_puntos * r7=new DLibV::Representacion_primitiva_puntos(DLibV::rgba8(255, 64, 64, 255));
 	r7->insertar(64, 0);
 	r7->insertar(92, 0);
 	r7->insertar(92, 16);
 	r7->insertar(64, 16);
 	r.insertar_representacion(r7);
+*/
+/*
 
+	DLibV::Representacion_bitmap * rt1=new DLibV::Representacion_bitmap(DLibV::Gestor_texturas::obtener(g_sprites));
+	rt1->establecer_alpha(128);
+	rt1->establecer_recorte(0,0,32,32);
+	rt1->establecer_posicion(0, 0, 32, 32);
+	r.insertar_representacion(rt1);
+
+
+	DLibV::Representacion_bitmap * rt2=new DLibV::Representacion_bitmap(DLibV::Gestor_texturas::obtener(g_sprites));
+	rt2->establecer_alpha(128);
+	rt2->establecer_recorte(0,0,32,32);
+	rt2->establecer_posicion(0, 32, 32, 32);
+	r.insertar_representacion(rt2);
+*/
 	r.ir_a(x, 32);
+	if(angulo)
+	{
+		r.transformar_rotar(angulo);
+		r.transformar_centro_rotacion(16, 16);
+	}
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }

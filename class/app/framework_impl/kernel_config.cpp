@@ -55,7 +55,7 @@ std::vector<DFramework::Par_input> Kernel_config::obtener_pares_input() const
 		return Par_input::tipos::teclado;
 	};
 
-	auto obtener_info_jugador=[this](std::map<int, App_config::input_jugador>& res, int iizq, int ider, int iarr, int iaba, int iesp, int zoommas, int zoommenos)
+	auto obtener_info_jugador=[this](std::map<int, App_config::input_jugador>& res, int iizq, int ider, int iarr, int iaba, int iesp, int zoommas, int zoommenos, int n1, int n2, int n3)
 	{
 		res[iizq]=config.acc_izquierda();
 		res[ider]=config.acc_derecha();
@@ -64,6 +64,9 @@ std::vector<DFramework::Par_input> Kernel_config::obtener_pares_input() const
 		res[iesp]=config.acc_espacio();
 		res[zoommas]=config.acc_zoom_mas();
 		res[zoommenos]=config.acc_zoom_menos();
+		res[n1]=config.acc_num_1();
+		res[n2]=config.acc_num_2();
+		res[n3]=config.acc_num_3();
 	};
 
 
@@ -72,7 +75,7 @@ std::vector<DFramework::Par_input> Kernel_config::obtener_pares_input() const
 		Par_input{Par_input::tipos::teclado, Input::escape, SDL_SCANCODE_ESCAPE, 0}};
 
 	std::map<int, App_config::input_jugador> mapa;
-	obtener_info_jugador(mapa, Input::izquierda, Input::derecha, Input::arriba, Input::abajo, Input::espacio, Input::zoom_mas, Input::zoom_menos);
+	obtener_info_jugador(mapa, Input::izquierda, Input::derecha, Input::arriba, Input::abajo, Input::espacio, Input::zoom_mas, Input::zoom_menos, Input::num1, Input::num2, Input::num3);
 	for(const auto& p : mapa) res.push_back({tipo_desde_config(p.second.tipo), p.first, p.second.codigo, p.second.device});
 
 	return res;

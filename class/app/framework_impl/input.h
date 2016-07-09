@@ -15,7 +15,10 @@ izquierda,
 derecha,
 espacio,
 zoom_mas,
-zoom_menos
+zoom_menos,
+num1,
+num2,
+num3,
 };
 
 };

@@ -18,10 +18,16 @@ config:{
 			0, 0, 86
 		], zoom_menos:[
 			0, 0, 87
+		], num_1:[
+			0, 0, 30
+		], num_2:[
+			0, 0, 31
+		], num_3:[
+			0, 0, 32
 		]
 	}, meta:{
 		v:1
 	}, video:{
-		doble_buffer:1, h_fisica_ventana:800, h_logica_ventana:800, modo_hardware:1, modo_pantalla:0, pantalla_anyformat:1, w_fisica_ventana:1000, w_logica_ventana:1000
+		doble_buffer:1, h_fisica_ventana:800, h_logica_ventana:800, modo_hardware:1, modo_pantalla:0, pantalla_anyformat:1, w_fisica_ventana:1200, w_logica_ventana:1200
 	}
 }
