@@ -29,6 +29,7 @@ void Kernel::inicializar(const Kernel_driver_interface& kdi, const Configuracion
 	controlador_fps.inicializar();
 }
 
+//Inicialización con valores hardcodeados.
 void Kernel::inicializar_entorno_grafico(const Info_ventana& iv)
 {
 	pantalla.inicializar(iv.w_fisica, iv.h_fisica);

@@ -55,7 +55,7 @@ class Controlador_principal:
 	int					angulo;
 
 	DLibV::Camara				camara;
-	DLibV::Representacion_primitiva_caja_lineas caja_movil;
+	DLibV::Representacion_primitiva_caja	caja_movil;
 	DLibV::Representacion_primitiva_puntos 	puntos_movil;
 	DLibV::Representacion_primitiva_linea 	linea_movil;
 };

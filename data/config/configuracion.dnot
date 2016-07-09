@@ -22,6 +22,6 @@ config:{
 	}, meta:{
 		v:1
 	}, video:{
-		doble_buffer:1, h_fisica_ventana:1000, h_logica_ventana:1000, modo_hardware:1, modo_pantalla:0, pantalla_anyformat:1, w_fisica_ventana:1200, w_logica_ventana:1200
+		doble_buffer:1, h_fisica_ventana:800, h_logica_ventana:800, modo_hardware:1, modo_pantalla:0, pantalla_anyformat:1, w_fisica_ventana:1000, w_logica_ventana:1000
 	}
 }

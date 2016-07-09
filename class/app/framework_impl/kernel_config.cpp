@@ -36,8 +36,7 @@ std::vector<std::string> Kernel_config::obtener_entradas_superficies() const
 
 DFramework::Info_ventana Kernel_config::obtener_info_ventana() const
 {
-	//TODO: Fix... Changes on this resolution via configuration DONT WORK.
-	return DFramework::Info_ventana{1200, 1000, 1200, 1000, "Migrating to OpenGL...", true};
+	return DFramework::Info_ventana{800, 400, 800, 400, "Migrating to OpenGL...", true};
 }
 
 std::vector<DFramework::Par_input> Kernel_config::obtener_pares_input() const
