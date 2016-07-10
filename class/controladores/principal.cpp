@@ -11,15 +11,12 @@ Controlador_principal::Controlador_principal(DLibH::Log_base& log, const Herrami
 	:log(log),
 	fuente(f.obtener_fuente("akashi", 20)),
 	interruptor(true), angulo(90), alpha(255),
-	camara(32,0,600,300,0,300),
+	camara({32,0,600,300},{0,300}),
 	caja_movil{DLibV::Representacion_primitiva_poligono::tipo::relleno, {0,0,6,6}, DLibV::rgba8(255, 0, 0, 255)},
-	puntos_movil(DLibV::rgba8(0, 255, 0, 255)),
+	puntos_movil({{0, 32}, {32,32}, {32,64}, {0, 64}}, DLibV::rgba8(0, 255, 0, 255)),
 	linea_movil{0,0, 32, 32, DLibV::rgba8(0, 0, 255, 255)}
 {
-	puntos_movil.insertar(0, 32);
-	puntos_movil.insertar(0+32, 32);
-	puntos_movil.insertar(0+32, 64);
-	puntos_movil.insertar(0, 64);
+
 }
 
 void Controlador_principal::preloop(DFramework::Input& input, float delta)
@@ -38,7 +35,7 @@ void Controlador_principal::loop(DFramework::Input& input, float delta)
 	if(input.es_input_down(Input::espacio)) 
 	{
 		camara.mut_zoom(1.0);
-		camara.enfocar_a(0, 0);
+		camara.enfocar_a({0, 0});
 		angulo=0;
 	}
 	else if(input.es_input_down(Input::num1)) camara.mut_zoom(1.0);
@@ -275,25 +272,16 @@ void Controlador_principal::poligono_relleno(DLibV::Pantalla& pantalla, int x, i
 
 void Controlador_principal::puntos(DLibV::Pantalla& pantalla, int x, int alpha)
 {
-	DLibV::Representacion_primitiva_puntos r(DLibV::rgba8(255, 0, 0, alpha));
+	DLibV::Representacion_primitiva_puntos r({{x,32},{x+32,32},{x+32, 64},{x, 64}}, DLibV::rgba8(255, 0, 0, alpha));
 	r.establecer_modo_blend(DLibV::Representacion::blends::alpha);
-	r.insertar(x, 32);
-	r.insertar(x+32, 32);
-	r.insertar(x+32, 64);
-	r.insertar(x, 64);
-
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
 }
 
 void Controlador_principal::puntos_rotar(DLibV::Pantalla& pantalla, int x, int alpha)
 {
-	DLibV::Representacion_primitiva_puntos r(DLibV::rgba8(255, 0, 0, alpha));
+	DLibV::Representacion_primitiva_puntos r({{x,32},{x+32,32},{x+32, 64},{x, 64}}, DLibV::rgba8(255, 0, 0, alpha));
 	r.establecer_modo_blend(DLibV::Representacion::blends::alpha);
-	r.insertar(x, 32);
-	r.insertar(x+32, 32);
-	r.insertar(x+32, 64);
-	r.insertar(x, 64);
 	
 	if(angulo)
 	{
@@ -336,11 +324,7 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 	DLibV::Representacion_primitiva_poligono * r6=new DLibV::Representacion_primitiva_poligono{DLibV::Representacion_primitiva_poligono::tipo::relleno, {{32, 0},{0,32},{32,32}}, DLibV::rgba8(255, 0, 0, 255)};
 	r.insertar_representacion(r6);
 
-	DLibV::Representacion_primitiva_puntos * r7=new DLibV::Representacion_primitiva_puntos(DLibV::rgba8(255, 64, 64, 255));
-	r7->insertar(64, 0);
-	r7->insertar(92, 0);
-	r7->insertar(92, 16);
-	r7->insertar(64, 16);
+	DLibV::Representacion_primitiva_puntos * r7=new DLibV::Representacion_primitiva_puntos({{64,0},{92,0},{92,16},{64,16}}, DLibV::rgba8(255, 64, 64, 255));
 	r.insertar_representacion(r7);
 /*
 

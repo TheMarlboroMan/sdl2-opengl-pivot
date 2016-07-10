@@ -1,5 +1,6 @@
 #include "cargador_recursos.h"
 #include "kernel_driver_interface.h"
+#include <source/string_utilidades.h>
 
 using namespace DFramework;
 
@@ -8,7 +9,7 @@ void Cargador_recursos::procesar(const std::vector<std::string>& entradas, void 
 	const char separador='\t';
 	for(auto& linea : entradas)
 	{
-		(this->*procesar_valores)(DLibH::Herramientas::explotar(linea, separador));
+		(this->*procesar_valores)(Herramientas_proyecto::explotar(linea, separador));
 	}
 }
 

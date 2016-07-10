@@ -1,7 +1,8 @@
 #include "director_estados.h"
 
-#include <class/dnot_parser.h>
 #include <algorithm>
+#include <class/dnot_parser.h>
+#include <source/string_utilidades.h>
 
 using namespace App;
 
@@ -78,7 +79,7 @@ void Director_estados::registrar_fuentes()
 	auto v=obtener_entradas_lector_txt_desde_ruta("data/recursos/fuentes.txt");
 	for(const auto& l : v)
 	{
-		auto p=DLibH::Herramientas::explotar(l, '\t');
+		auto p=Herramientas_proyecto::explotar(l, '\t');
 		if(p.size()!=3)
 		{
 			throw std::runtime_error("Error al parsear fichero de fuentes");
