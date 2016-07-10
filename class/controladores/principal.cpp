@@ -197,7 +197,7 @@ void Controlador_principal::bmp_rotar(DLibV::Pantalla& pantalla, int x)
 
 void Controlador_principal::ttf(DLibV::Pantalla& pantalla, int x)
 {
-	DLibV::Representacion_TTF r(fuente, DLibV::rgba8(255, 255, 255, 255), "Hola "+std::to_string(camara.acc_zoom()));
+	DLibV::Representacion_TTF r(fuente, DLibV::rgba8(255, 255, 255, 255), "Hola "+compat::to_string(camara.acc_zoom()));
 	r.ir_a(x, 32);
 	r.volcar(pantalla);
 	r.volcar(pantalla, camara);
