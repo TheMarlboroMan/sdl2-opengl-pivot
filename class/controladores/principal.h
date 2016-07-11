@@ -7,6 +7,7 @@
 
 //Específicos de la aplicación...
 #include <class/gestor_fuentes_ttf.h>
+#include <templates/parches_compat.h>
 #include <def_video.h>
 
 
@@ -36,7 +37,7 @@ class Controlador_principal:
 	void					bmp_flip(DLibV::Pantalla& pantalla, int x, int t);
 	void					bmp_rotar(DLibV::Pantalla& pantalla, int x);
 	void					bmp_patron(DLibV::Pantalla& pantalla, int x);
-	void					ttf(DLibV::Pantalla& pantalla, int x);
+	void					ttf(DLibV::Pantalla& pantalla, int x, const std::string&);
 	void					caja(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					caja_rellena(DLibV::Pantalla& pantalla, int x, int alpha);
 	void					linea(DLibV::Pantalla& pantalla, int x, int alpha);
@@ -59,6 +60,34 @@ class Controlador_principal:
 	DLibV::Representacion_primitiva_caja	caja_movil;
 	DLibV::Representacion_primitiva_puntos 	puntos_movil;
 	DLibV::Representacion_primitiva_linea 	linea_movil;
+
+	class Texto_ogl
+	{
+		public:
+
+		Texto_ogl(const DLibV::Fuente_TTF& fuente, int x, int y)
+			:texto(fuente, DLibV::rgba8(255,255,255,255))
+		{
+			texto.ir_a(60, 60);
+			configurar(x, y);
+		}
+
+						void volcar(DLibV::Pantalla& p)
+		{
+			texto.volcar(p);
+		}
+
+		void				configurar(int x, int y)
+		{
+			std::string nueva=compat::to_string(x)+","+compat::to_string(y);
+			if(nueva!=texto.acc_cadena()) texto.asignar(nueva);
+		}
+
+		private:
+	
+
+		DLibV::Representacion_TTF 	texto;
+	}texto_ogl;
 };
 
 }
