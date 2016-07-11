@@ -289,21 +289,26 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 {
 	DLibV::Representacion_agrupada r({x, 32}, true);
 
-	//TODO: Also, does something wrong with the camera and sometimes dissapears.
+	//TODO: The rotated position for this type is wrong.
+	//TODO: Some light has been shed: a representation with the - position fucks it up.
+
+	//TODO: Check all other types for their rotation.
 	//TODO: Something is wrong with the first one: always.
+
 	DLibV::Representacion_primitiva_caja * r4=new DLibV::Representacion_primitiva_caja{DLibV::Representacion_primitiva_poligono::tipo::relleno, {32, 64, 32, 32}, DLibV::rgba8(0, 0, 255, 255)};
 	r.insertar_representacion(r4);
 
 	DLibV::Representacion_TTF * r3=new DLibV::Representacion_TTF(fuente, DLibV::rgba8(255, 255, 255, 255), "Hola");
 	r3->ir_a(0, 64);
 	r.insertar_representacion(r3);
-	
+
 	DLibV::Representacion_bitmap * r2=new DLibV::Representacion_bitmap(DLibV::Gestor_texturas::obtener(g_sprites),
 		{64, 32, 64, 64}, {32,0,32,32}, DLibV::Representacion_grafica::sampling::completo);
 	r2->establecer_pincel(16, 32);
 	r.insertar_representacion(r2);
 
 	DLibV::Representacion_bitmap * r1=new DLibV::Representacion_bitmap(DLibV::Gestor_texturas::obtener(g_sprites),
+//		{-32, 32, 32, 32}, {32,32,32,32},
 		{-32, 32, 32, 32}, {32,32,32,32}, DLibV::Representacion_grafica::sampling::completo);
 	r1->establecer_alpha(64);
 	r1->establecer_modo_blend(DLibV::Representacion::blends::alpha);
@@ -322,7 +327,7 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 	if(angulo)
 	{
 		r.transformar_rotar(angulo);
-		r.transformar_centro_rotacion(32, 32);
+		r.transformar_centro_rotacion(0, 0); //32, 32);
 	}
 
 	r.establecer_alpha(alpha);
