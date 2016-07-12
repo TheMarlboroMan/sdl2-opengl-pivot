@@ -75,7 +75,7 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 {
 	pantalla.limpiar(DLibV::rgba8(64, 64, 64, 255));
 
-	int x=0;
+	int x=100;
 
 	//Posición real de la cámara
 	DLibV::Representacion_primitiva_caja ccam{DLibV::Representacion_primitiva_poligono::tipo::lineas,{(int)camara.acc_pos_x(), (int)camara.acc_pos_y(), (unsigned int)camara.acc_pos_w(), (unsigned int)camara.acc_pos_h()}, DLibV::rgba8(255, 255, 255, 12)};
@@ -94,6 +94,7 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 
 	linea_movil.ir_a(camara.acc_x(), camara.acc_y()+camara.acc_foco_h());
 	linea_movil.volcar(pantalla);
+
 
 	//These are all the representations currently in use.
 	bmp(pantalla, x); x+=40;
@@ -119,7 +120,6 @@ void Controlador_principal::dibujar(DLibV::Pantalla& pantalla)
 	poligono_relleno(pantalla, x, 128); x+=40;
 	puntos(pantalla, x, 255); x+=40;
 	puntos_rotar(pantalla, x, 128); x+=40;
-//	compuesta(pantalla, x); x+=128;
 
 	texto_ogl.volcar(pantalla);
 }
@@ -289,13 +289,7 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 {
 	DLibV::Representacion_agrupada r({x, 32}, true);
 
-	//TODO: The rotated position for this type is wrong.
-	//TODO: Some light has been shed: a representation with the - position fucks it up.
-
-	//TODO: Check all other types for their rotation.
-	//TODO: Something is wrong with the first one: always.
-
-	DLibV::Representacion_primitiva_caja * r4=new DLibV::Representacion_primitiva_caja{DLibV::Representacion_primitiva_poligono::tipo::relleno, {32, 64, 32, 32}, DLibV::rgba8(0, 0, 255, 255)};
+	DLibV::Representacion_primitiva_caja * r4=new DLibV::Representacion_primitiva_caja{DLibV::Representacion_primitiva_poligono::tipo::relleno, {32, 32, 32, 32}, DLibV::rgba8(0, 0, 255, 255)};
 	r.insertar_representacion(r4);
 
 	DLibV::Representacion_TTF * r3=new DLibV::Representacion_TTF(fuente, DLibV::rgba8(255, 255, 255, 255), "Hola");
@@ -327,7 +321,7 @@ void Controlador_principal::compuesta(DLibV::Pantalla& pantalla, int x)
 	if(angulo)
 	{
 		r.transformar_rotar(angulo);
-		r.transformar_centro_rotacion(0, 0); //32, 32);
+		r.transformar_centro_rotacion(32, 32);
 	}
 
 	r.establecer_alpha(alpha);
