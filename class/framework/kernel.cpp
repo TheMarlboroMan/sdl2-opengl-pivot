@@ -1,61 +1,48 @@
 #include "kernel.h"
 #include <cstdlib>
 
-using namespace DFramework;
+using namespace dfw;
 
-Kernel::Kernel(Herramientas_proyecto::Controlador_argumentos& carg)
-	:paso_delta(0.01), controlador_argumentos(carg), 
-	controlador_fps(), pantalla()
+kernel::kernel(tools::arg_manager& carg)
+	:delta_step(0.01), arg_manager_i(carg), 
+	fps_counter_i(), screen_i()
 {
 
 }
 
-void Kernel::inicializar(const Kernel_driver_interface& kdi, const Configuracion_base& config)
+void kernel::init(const kernel_driver_interface& kdi, const base_config& config)
 {
-	inicializar_entorno_grafico(kdi.obtener_info_ventana());
-	inicializar_entorno_audio(config);
+	init_video_environment(kdi.get_window_info());
+	init_audio_environment(config);
 
 	//Inicializar recursos.
-	Cargador_recursos cargador_recursos;
-	cargador_recursos.generar_recursos_texturas(kdi.obtener_entradas_texturas(), pantalla);
-	cargador_recursos.generar_recursos_superficies(kdi.obtener_entradas_superficies(), pantalla);
-	cargador_recursos.generar_recursos_audio(kdi.obtener_entradas_audio());
-	cargador_recursos.generar_recursos_musica(kdi.obtener_entradas_musica());
+	resource_loader r_loader;
+	r_loader.generar_recursos_texturas(kdi.get_textures());
+	r_loader.generar_recursos_superficies(kdi.get_surfaces(), screen_i);
+	r_loader.generar_recursos_audio(kdi.get_sounds());
+	r_loader.generar_recursos_musica(kdi.get_musics());
 	
 	//Inicializar controles.
-	input.configurar(kdi.obtener_pares_input()); 
+	input_i.configure(kdi.get_input()); 
 
 	//Inicialización controlador tiempo.
-	controlador_fps.inicializar();
+	fps_counter_i.init();
 }
 
 //Inicialización con valores hardcodeados.
-void Kernel::inicializar_entorno_grafico(const Info_ventana& iv)
+void kernel::init_video_environment(const info_screen& iv)
 {
-	pantalla.inicializar(iv.w_fisica, iv.h_fisica);
-	pantalla.establecer_medidas_logicas(iv.w_logica, iv.h_logica);
-	pantalla.establecer_modo_ventana(DLibV::Pantalla::M_VENTANA);
-	pantalla.establecer_titulo(iv.nombre.c_str());
-	DLibV::Utilidades_graficas_SDL::mostrar_ocultar_cursor(iv.mostrar_cursor);
+	screen_i.init(iv.px_w, iv.px_h);
+	screen_i.set_logical_size(iv.logical_w, iv.logical_h);
+	screen_i.set_title(iv.title);
+	ldv::set_cursor(iv.show_cursor);
 }
 
-void Kernel::ciclar_modo_pantalla()
+void kernel::init_audio_environment(const base_config& config)
 {
-	unsigned int modo=pantalla.acc_modo_ventana();
-	++modo;
-
-	if(modo == DLibV::Pantalla::M_MAX_MODO)
-	{
-		modo=DLibV::Pantalla::M_VENTANA;
-	}
-
-	pantalla.establecer_modo_ventana(modo);
-}
-
-
-void Kernel::inicializar_entorno_audio(const Configuracion_base& config)
-{
-	Audio::inicializar_entorno_audio(
+	throw std::runtime_error("AUDIO ENV MUST CHANGE!!!");
+/*
+	Audio::init_entorno_audio(
 		config.acc_audio_ratio(), 
 		config.acc_audio_salidas(),
 		config.acc_audio_buffers(),
@@ -63,4 +50,5 @@ void Kernel::inicializar_entorno_audio(const Configuracion_base& config)
 
 	Audio::establecer_volumen(config.acc_volumen_audio());
 	Audio::establecer_volumen_musica(config.acc_volumen_musica());
+*/
 }

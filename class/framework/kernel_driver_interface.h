@@ -13,39 +13,39 @@
 * que es una clase que puede tener tipos propios y que se usará aparte.
 */
 
-namespace DFramework
+namespace dfw
 {
 
-struct Info_ventana
+struct screen_info
 {
-	int 		w_fisica, h_fisica;
-	int 		w_logica, h_logica;
-	std::string 	nombre;
-	bool 		mostrar_cursor;
+	int 		px_w, px_h;
+	int 		logical_w, logical_h;
+	std::string 	name;
+	bool 		show_cursor;
 };
 
-struct Par_input
+struct input_pair
 {
-	enum class 	tipos {nada, teclado, raton, joystick};
-	tipos 		tipo;
-	int 		clave, sdl_clave, indice_dispositivo;
+	enum class 	types {none, keyboard, mouse, joystick};
+	types 		type;
+	int 		key, sdl_key, device_index;
 };
 
-class Kernel_driver_interface
+class kernel_driver_interface
 {
 	public:
 
 	//Carga de recursos.
-	virtual std::vector<std::string> 	obtener_entradas_audio() const=0;
-	virtual std::vector<std::string> 	obtener_entradas_musica() const=0;
-	virtual std::vector<std::string> 	obtener_entradas_texturas() const=0;
-	virtual std::vector<std::string> 	obtener_entradas_superficies() const=0;
+	virtual std::vector<std::string> 	get_audio_entries() const=0;
+	virtual std::vector<std::string> 	get_music_entries() const=0;
+	virtual std::vector<std::string> 	get_texture_entries() const=0;
+	virtual std::vector<std::string> 	get_surface_entries() const=0;
 
 	//Información para ventana.
-	virtual Info_ventana			obtener_info_ventana() const=0;
+	virtual screen_info			get_window_info() const=0;
 
 	//Información del input.
-	virtual std::vector<Par_input> 		obtener_pares_input() const=0;
+	virtual std::vector<Par_input> 		get_input_pairs() const=0;
 };
 
 }

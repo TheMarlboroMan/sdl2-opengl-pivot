@@ -1,13 +1,8 @@
 #include "input.h"
 
-using namespace DFramework;
+using namespace dfw;
 
-void Input::turno()
-{
-	controles_sdl.recoger();
-}
-
-Input::Resultado_lookup Input::obtener(int i) const
+input::lookup_result input::get_lookup(int i) const
 {
 	//Esto puede dar problemas en el futuro si queremos usar el mismo
 	//input para dos cosas distintas.
@@ -21,111 +16,106 @@ Input::Resultado_lookup Input::obtener(int i) const
 	}
 	else
 	{
-		Resultado_lookup resultado(Resultado_lookup::NADA);
+		lookup_result resultado(lookup_result::types::none);
 
-		auto f=[&resultado, this, i](const tipo_mapa& mapa, int tipo)
+		auto f=[&resultado, this, i](const t_map& mapa, int tipo)
 		{
 			resultado.mapa=tipo;
 			auto it=mapa.equal_range(i);
 			for(auto r=it.first; r!=it.second; ++r)
 			{
-				resultado.val.push_back({r->second.sdl_clave, r->second.indice_dispositivo});
+				resultado.val.push_back({r->second.sdl_key, r->second.device_index});
 			}
 
 			lookup.insert(std::make_pair(i, resultado));
 		};
 
 		//Buscamos en cada uno de los mapas si algo se corresponde con
-		//la clave de aplicación de entrada. Si existe se meterá
+		//la key de aplicación de entrada. Si existe se meterá
 		//en el mapa de lookup el dispositivo y el valor SDL. La
 		//lambda además actualiza el resultado para devolverlo.
 
-		if(mapa_teclado.count(i))
+		if(keyboard_map.count(i))
 		{
-			f(mapa_teclado, Resultado_lookup::TECLADO); 
+			f(keyboard_map, lookup_result::types::keyboard); 
 		}
-		else if(mapa_raton.count(i))
+		else if(mouse_map.count(i))
 		{
-			f(mapa_raton, Resultado_lookup::RATON); 
+			f(mouse_map, lookup_result::types::mouse); 
 		}
-		else if(mapa_joystick.count(i))
+		else if(joystick_map.count(i))
 		{
-			f(mapa_joystick, Resultado_lookup::JOYSTICK);
+			f(joystick_map, lookup_result::types::joystick);
 		}
 
 		return resultado;
 	}
 }
 
-bool Input::es_senal_salida() const
+bool input::is_input_down(int i) const
 {
-	return controles_sdl.es_senal_salida();
-}
-
-bool Input::es_input_down(int i) const
-{
-	Resultado_lookup rl=obtener(i);
+	lookup_result rl=get_lookup(i);
 	switch(rl.mapa)
 	{
-		case Resultado_lookup::TECLADO:
+		case lookup_result::types::keyboard:
 			for(auto val : rl.val) 
-				if(controles_sdl.es_tecla_down(val.val)) return true;
+				if(sdlinput.es_tecla_down(val.val)) return true;
 		break;
-		case Resultado_lookup::RATON:
+		case lookup_result::types::mouse:
 			for(auto val : rl.val) 
-				if(controles_sdl.es_boton_down(val.val)) return true;
+				if(sdlinput.es_boton_down(val.val)) return true;
 		break;
-		case Resultado_lookup::JOYSTICK:
+		case lookup_result::types::joystick:
 			for(auto val : rl.val) 
-				if(controles_sdl.es_joystick_boton_down(val.indice, val.val)) return true;
+				if(sdlinput.es_joystick_boton_down(val.index, val.val)) return true;
 		break;
-		default: break;
+		case lookup_result::types::none: break;
 	}
 
 	return false;
 }
 
-bool Input::es_input_up(int i) const
+bool input::is_input_up(int i) const
 {
-	Resultado_lookup rl=obtener(i);
+	lookup_result rl=get_lookup(i);
 	switch(rl.mapa)
 	{
-		case Resultado_lookup::TECLADO:
+		case lookup_result::types::keyboard:
 			for(auto val : rl.val) 
-				if(controles_sdl.es_tecla_up(val.val)) return true;
+				if(sdlinput.es_tecla_up(val.val)) return true;
 		break;
-		case Resultado_lookup::RATON:
+		case lookup_result::types::mouse:
 			for(auto val : rl.val) 
-				if(controles_sdl.es_boton_up(val.val)) return true;
+				if(sdlinput.es_boton_up(val.val)) return true;
 		break;
-		case Resultado_lookup::JOYSTICK:
+		case lookup_result::types::joystick:
 			for(auto val : rl.val) 
-				if(controles_sdl.es_joystick_boton_up(val.indice, val.val)) return true;
+				if(sdlinput.es_joystick_boton_up(val.index, val.val)) return true;
 		break;
-		default: break;
+		case lookup_result::types::none: break;
 	}
 
 	return false;
 }
 
-bool Input::es_input_pulsado(int i) const
+bool input::is_input_pressed(int i) const
 {
-	Resultado_lookup rl=obtener(i);
+	lookup_result rl=get_lookup(i);
 	switch(rl.mapa)
 	{
-		case Resultado_lookup::TECLADO:
+		case lookup_result::types::keyboard:
 			for(auto val : rl.val) 
-				if(controles_sdl.es_tecla_pulsada(val.val)) return true;
+				if(sdlinput.es_tecla_pulsada(val.val)) return true;
 		break;
-		case Resultado_lookup::RATON:
+		case lookup_result::types::mouse:
 			for(auto val : rl.val)
-				if(controles_sdl.es_boton_pulsado(val.val)) return true;
+				if(sdlinput.es_boton_pulsado(val.val)) return true;
 		break;
-		case Resultado_lookup::JOYSTICK:
+		case lookup_result::types::joystick:
 			for(auto val : rl.val) 
-				if(controles_sdl.es_joystick_boton_pulsado(val.indice, val.val)) return true;
+				if(sdlinput.es_joystick_boton_pulsado(val.index, val.val)) return true;
 		break;
-		default: break;
+		case lookup_result::types::none; break;
 	}
 
 	return false;
@@ -134,27 +124,24 @@ bool Input::es_input_pulsado(int i) const
 //Esta es la función a la que se llama en primer lugar desde el Kernel. 
 //Cargará todos los inputs registrados por la aplicación.
 //Se mira primero el tipo de input y luego se hace corresponder la
-//clave de aplicación con la clave SDL.
+//key de aplicación con la key SDL.
 
-void Input::configurar(const std::vector<Par_input>& v)
+void input::configure(const std::vector<input_pair>& v)
 {
-	for(const auto& i : v)
-	{
-		configurar(i);
-	}
+	for(const auto& i : v) configure(i);
 }
 
-void Input::configurar(Par_input i)
+void input::configure(input_pair i)
 {
-	tinput ti={i.sdl_clave, i.indice_dispositivo};
-	auto par=std::make_pair(i.clave, ti);
+	tinput ti={i.sdl_key, i.device_index};
+	auto par=std::make_pair(i.key, ti);
 
 	switch(i.tipo)
 	{
-		case Par_input::tipos::nada:		break;
-		case Par_input::tipos::teclado: 	mapa_teclado.insert(par); break;
-		case Par_input::tipos::raton:		mapa_raton.insert(par); break;
-		case Par_input::tipos::joystick:	mapa_joystick.insert(par); break;
+		case input_pair::types::none:		break;
+		case input_pair::types::keyboard: 	keyboard_map.insert(par); break;
+		case input_pair::types::mouse:		mouse_map.insert(par); break;
+		case input_pair::types::joystick:	joystick_map.insert(par); break;
 	}
 }
 
@@ -162,81 +149,81 @@ void Input::configurar(Par_input i)
 //Elimina un input de los mapas y del lookup, liberándolo para poder volverlo
 //a configurar.
 
-void Input::limpiar(int clave)
+void input::clear(int key)
 {
-	if(mapa_teclado.count(clave)) mapa_teclado.erase(clave);
-	if(mapa_raton.count(clave)) mapa_raton.erase(clave);
-	if(mapa_joystick.count(clave)) mapa_joystick.erase(clave);
-	if(lookup.count(clave)) lookup.erase(clave);
+	if(keyboard_map.count(key)) keyboard_map.erase(key);
+	if(mouse_map.count(key)) mouse_map.erase(key);
+	if(joystick_map.count(key)) joystick_map.erase(key);
+	if(lookup.count(key)) lookup.erase(key);
 }
 
-Input::Entrada Input::obtener_entrada() const
+input::input_description input::get_current_description() const
 {
-	if(controles_sdl.recibe_eventos_teclado_down())
+	if(sdlinput.is_event_keyboard_down())
 	{
-		return Entrada{Entrada::ttipo::teclado, controles_sdl.obtener_tecla_down(), 0};
+		return input_description{input_description::types::keyboard, sdlinput.get_key_down_index(), 0};
 	}
-	else if(controles_sdl.recibe_eventos_boton_raton())
+	else if(sdlinput.is_event_mouse_click())
 	{
-		return Entrada{Entrada::ttipo::raton, controles_sdl.obtener_boton_down(), 0};
+		return input_description{input_description::types::mouse, sdlinput.get_mouse_button_down_index(), 0};
 	}
-	else if(controles_sdl.recibe_eventos_boton_joystick_down())
+	else if(sdlinput.is_joystick_button_down())
 	{
-		int cantidad=controles_sdl.acc_cantidad_joysticks(), i=0;
+		int cantidad=sdlinput.get_joysticks_size(), i=0;
 		while(i < cantidad)
 		{
-			int btn=controles_sdl.obtener_joystick_boton_down(i);
-			if(btn >= 0) return Entrada{Entrada::ttipo::joystick, btn, i};
+			int btn=sdlinput.get_joystick_button_down_index(i);
+			if(btn >= 0) return input_description{input_description::types::joystick, btn, i};
 			++i;
 		}
 	}
 
-	return Entrada{Entrada::ttipo::nada, 0, 0};
+	return input_description{input_description::types::none, 0, 0};
 }
 
-Input::Entrada Input::localizar_entrada(int i) const
+input::input_description input::locate_description(int i) const
 {
-	Entrada res{Entrada::ttipo::nada, 0, 0};
+	input_description res{input_description::types::none, 0, 0};
 
-	auto l=obtener(i);
+	auto l=get_lookup(i);
 
-	switch(l.mapa)
+	switch(l.type)
 	{
-		case Resultado_lookup::NADA:	
+		case lookup_result::types::none:	
 		break;
 		
-		case Resultado_lookup::TECLADO:
-			res.tipo=Entrada::ttipo::teclado;
-			res.codigo=l.val[0].val;
+		case lookup_result::types::keyboard:
+			res.type=input_description::types::keyboard;
+			res.code=l.val[0].val;
 			
 		break;
 
-		case Resultado_lookup::RATON:
-			res.tipo=Entrada::ttipo::raton;
-			res.codigo=l.val[0].val;
+		case lookup_result::types::mouse:
+			res.type=input_description::types::mouse;
+			res.code=l.val[0].val;
 		break;
 
-		case Resultado_lookup::JOYSTICK:
-			res.tipo=Entrada::ttipo::joystick;
-			res.dispositivo=l.val[0].indice;
-			res.codigo=l.val[0].val;
+		case lookup_result::types::joystick:
+			res.type=input_description::types::joystick;
+			res.device=l.val[0].index;
+			res.code=l.val[0].val;
 		break;
 	}
 
 	return res;
 }
 
-Par_input Input::desde_entrada(const Input::Entrada& e, int clave)
+input_pair input::from_description(const input::input_description& e, int key)
 {
-	Par_input::tipos t=Par_input::tipos::nada;
+	input_pair::tipos t=input_pair::tipos::none;
 
 	switch(e.tipo)
 	{
-		case Entrada::ttipo::nada: break;
-		case Entrada::ttipo::teclado: t=Par_input::tipos::teclado; break;
-		case Entrada::ttipo::raton: t=Par_input::tipos::raton; break;
-		case Entrada::ttipo::joystick: t=Par_input::tipos::joystick; break;
+		case input_description::types::none: break;
+		case input_description::types::keyboard: t=input_pair::types::keyboard; break;
+		case input_description::types::mouse: t=input_pair::types::mouse; break;
+		case input_description::types::joystick: t=input_pair::types::joystick; break;
 	}
 
-	return Par_input{t, clave, e.codigo, e.dispositivo};
+	return input_pair{t, key, e.code, e.device};
 }

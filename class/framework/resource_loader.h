@@ -1,5 +1,5 @@
-#ifndef CARGADOR_RECURSOS_H
-#define CARGADOR_RECURSOS_H
+#ifndef DFW_RESOURCE_LOADER_H
+#define DFW_RESOURCE_LOADER_H
 
 /*Un cargador de recursos gráficos y de audio. Para cargar los recursos usa
 ficheros en disco, localizados en las rutas de turno. Tiene un rollo autoload,
@@ -36,30 +36,35 @@ obtenemos siempre mediante los gestores de turno.
 
 #include <stdexcept>
 #include <libDan2.h>
-#include <class/lector_txt.h>
+#include <class/text_reader.h>
 
-extern DLibH::Log_base LOG;
-namespace DFramework
+namespace dfw
 {
 
-class Cargador_recursos
+class resource_loader
 {
 	public:
 	
-	void generar_recursos_texturas(const std::vector<std::string>&, DLibV::Pantalla &pantalla);
-	void generar_recursos_superficies(const std::vector<std::string>&, DLibV::Pantalla &pantalla);
-	void generar_recursos_audio(const std::vector<std::string>&);
-	void generar_recursos_musica(const std::vector<std::string>&);
+	resource_loader(ldv::resource_manager&, lda::resorce_manager);
+
+	void generate_textures(const std::vector<std::string>&);
+	void generate_surfaces(const std::vector<std::string>&, ldv::screen &pantalla);
+	void generate_sounds(const std::vector<std::string>&);
+	void generate_music(const std::vector<std::string>&);
 
 	private:
 
-	void procesar_entrada_musica(const std::vector<std::string>&);
-	void procesar_entrada_audio(const std::vector<std::string>&);
-	void procesar_entrada_textura(const std::vector<std::string>&);
-	void procesar_entrada_superficie(const std::vector<std::string>&);
-	void procesar(const std::vector<std::string>& entradas, void (Cargador_recursos::*)(const std::vector<std::string>&));
+	void process_music(const std::vector<std::string>&);
+	void process_sounds(const std::vector<std::string>&);
+	void process_textures(const std::vector<std::string>&);
+	void process_surfaces(const std::vector<std::string>&);
+	void process(const std::vector<std::string>& entradas, void (resource_loader::*)(const std::vector<std::string>&));
 
-	DLibV::Pantalla * pantalla;	//Un hack para poder usar métodos más genéricos en "procesar".
+	ldv::resorce_manager&	video_m;
+	lda::resource_manager&	audio_m;
+
+	
+	ldv::screen * screen;	//Un hack para poder usar métodos más genéricos en "procesar".
 };
 
 }

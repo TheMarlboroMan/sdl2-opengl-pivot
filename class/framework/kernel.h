@@ -1,49 +1,45 @@
-#ifndef KERNEL_MOTOR_SDL2_H
-#define KERNEL_MOTOR_SDL2_H
+#ifndef DFRAMEWORK_KERNEL_H
+#define DFRAMEWORK_KERNEL_H
 
 #include <string>
 #include "kernel_driver_interface.h"
-#include "configuracion_base.h"
-#include "input.h"
+#include "base_config.h"
+#include "input_i.h"
 #include "audio.h"
-#include "cargador_recursos.h"
-#include <class/controlador_argumentos.h>
+#include "resource_loader.h"
+#include <class/arg_manager.h>
 
 /**
-* El Kernel es propietario de los recursos y la interface de input. No es
+* El kernel es propietario de los recursos y la interface de input_i. No es
 * propietario de la configuración, que puede variar para cada proyecto.
 */
 
-namespace DFramework
+namespace dfw
 {
 
-class Kernel_exception
-	:public std::runtime_error
-{
-	public:
-	Kernel_exception(const std::string& m):std::runtime_error(m) {}
-};
-
-
-class Kernel
+class kernel
 {
 	public:
 
-				Kernel(Herramientas_proyecto::Controlador_argumentos&);
-	void 			ciclar_modo_pantalla();
-	int			acc_fps() const {return controlador_fps.acc_frames_contados();}
-	void 			inicializar(const Kernel_driver_interface&, const Configuracion_base&);
+				kernel(tools::arg_manager&);
+	int			get_fps() const {return fps_counter_i.get_frame_count();}
+	void 			init(const kernel_driver_interface&, const base_config&);
 
-	Input&			acc_input() {return input;}
-	DLibV::Pantalla& 	acc_pantalla() {return pantalla;}
-	Herramientas_proyecto::Controlador_argumentos& acc_controlador_argumentos() {return controlador_argumentos;}
+	input&			get_input() {return input_i;}
+	ldv::screen&	 	get_screen() {return screen_i;}
+	tools::arg_manager& 	get_arg_manager() {return arg_manager_i;}
 
-	float 			acc_paso_delta() const {return paso_delta;}
-	void 			mut_paso_delta(float v) {paso_delta=v;}
-	void			turno_fps() {controlador_fps.turno();}
-	void			iniciar_paso_loop() {controlador_fps.iniciar_paso_loop();}
-	bool			consumir_loop(float delta) {return controlador_fps.consumir_loop(delta);}
-	void			procesar_cola_sonido() {Audio::procesar_cola_sonido();}
+	float 			get_delta_step() const {return delta_step;}
+	void 			set_delta_step(float v) {delta_step=v;}
+	void			do_fps_count() {fps_counter_i.tic();}
+	void			init_loop_step() {fps_counter_i.init_loop_step();}
+	bool			consume_loop(float delta) {return fps_counter_i.consume_loop(delta);}
+	void			do_audio_queue() {
+	//TODO TODO TODO
+	//Audio::procesar_cola_sonido();	
+		throw std::runtime_error("DO AUDIO QUEUE IS MISSING STILL");
+	
+	}
 
 
 	///////////////////
@@ -51,20 +47,20 @@ class Kernel
 
 	private:
 
-	float paso_delta;
+	float delta_step;
 
-	Herramientas_proyecto::Controlador_argumentos& 	controlador_argumentos;
-	DLibH::Controlador_fps_SDL 			controlador_fps;
-	DLibV::Pantalla 				pantalla;
-	Input						input;
+	tools::arg_manager& 				arg_manager_i;
+	ldt::fps_counter	 			fps_counter_i;
+	ldv::screen 					screen_i;
+	input						input_i;
 
 	///////////////////////////
 	// Internos...
 
 	private:
 
-	void 			inicializar_entorno_grafico(const Info_ventana&);
-	void 			inicializar_entorno_audio(const Configuracion_base& config);
+	void 			init_video_environment(const info_screen&);
+	void 			init_audio_environment(const base_config& config);
 };
 
 }

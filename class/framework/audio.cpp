@@ -1,149 +1,70 @@
 #include "audio.h"
 
-using namespace DFramework;
+using namespace dfw;
 
-DLibA::Controlador_audio_SDL * Audio::controlador_audio=NULL;
-DLibA::Cola_sonido Audio::cola_sonido;
-std::vector<unsigned int> Audio::canales_detenidos;
-
-bool Audio::inicializar_entorno_audio(int pratio, int psalidas, int pbuffers, int pcanales)
+audio::audio(lda::audio_controller& a)
+	:ac(a), queue(ac)
 {
-	DLibA::Controlador_audio_SDL::configurar_ratio(pratio);
-	DLibA::Controlador_audio_SDL::configurar_salidas(psalidas);
-	DLibA::Controlador_audio_SDL::configurar_buffers(pbuffers);
-	DLibA::Controlador_audio_SDL::configurar_canales_audio(pcanales);
 
-	controlador_audio=DLibA::Controlador_audio_SDL::obtener();
-
-	if(!controlador_audio->iniciar())
-	{
-		controlador_audio=NULL;
-		return false;
-	}
-	else
-	{
-		return true;
-	}
 }
 
-DLibA::Canal_audio Audio::obtener_canal_libre()
-{	
-	if(!controlador_audio)
-	{
-		throw Excepcion_audio("Error al solicitar canal: el sistema de audio no ha sido inicializado");
-	}
-	else
-	{
-		return controlador_audio->obtener_canal_libre();
-	}
-}
-
-/*Pausa todos los canales.*/
-
-void Audio::pausar()
+void audio::pausar_active()
 {
-	if(!controlador_audio)
-	{
-		throw Excepcion_audio("Error al pausar: el sistema de audio no ha sido inicializado");
-	}
-	else
-	{
-		controlador_audio->pausar_sonido();
-	}
-}
+	unsigned int canales=ac.get_requested_channels();
+	unsigned int i=0;
 
-/*Pausa sólo aquellos canales que ahora mismo no estén libres. Guarda los 
-índices de los canales para poderlos recuperar más adelante.*/
-
-void Audio::pausar_canales_activos()
-{
-	if(!controlador_audio)
+	while(i < canales)
 	{
-		throw Excepcion_audio("Error al pausar: el sistema de audio no ha sido inicializado");
-	}
-	else
-	{
-		unsigned int canales=controlador_audio->acc_canales_audio();
-		unsigned int i=0;
-
-		while(i < canales)
+		auto c=ac.get_channel(i);
+		if(c.is_playing())
 		{
-			DLibA::Canal_audio c=controlador_audio->obtener_canal(i);
-			if(c.es_reproduciendo())
-			{
-				c.pausar();
-				canales_detenidos.push_back(i);				
-			}
-			++i;
+			c.pause();
+			paused_channels.push_back(i);				
 		}
+		++i;
 	}
 }
 
 /*Todos los sonidos vuelven a reproducirse...*/
 
-void Audio::despausar()
+void audio::unpause()
 {
-	if(!controlador_audio)
-	{
-		throw Excepcion_audio("Error al despausar: el sistema de audio no ha sido inicializado");
-	}
-	else
-	{
-		controlador_audio->reanudar_sonido();
-	}
-
-	canales_detenidos.clear();
+	ca.resume_sound();
+	paused_channels.clear();
 }
 
 /*Los sonidos en los canales activos que se pausaron vuelven a reproducirse. El
 buffer de canales guardados se vacía para permitir usar el sistema de nuevo.*/
 
-void Audio::despausar_canales_activos()
+void audio::resume_active()
 {
-	if(!controlador_audio)
+	for(unsigned int i : paused_channels)
 	{
-		throw Excepcion_audio("Error al pausar: el sistema de audio no ha sido inicializado");
-	}
-	else
-	{
-		for(unsigned int i : canales_detenidos)
-		{
-			DLibA::Canal_audio c=controlador_audio->obtener_canal(i);
-			c.reanudar();
-		}
+		ca.get_channel(i).resume();
 	}
 	
-	canales_detenidos.clear();
+	paused_channels.clear()
 }
 
 /*Reanuda los sonidos pausados que no fueran guardados mediante pausar_activos.*/
 
-void Audio::despausar_excepto_activos()
+void audio::resume_inactive()
 {
-	if(!controlador_audio)
+	unsigned int canales=ca.get_requested_channels();
+	unsigned int i=0;
+
+	if(!paused_channels.size())
 	{
-		throw Excepcion_audio("Error al pausar: el sistema de audio no ha sido inicializado");
+		ca.resume_sound();
 	}
-	else
+	else while(i < canales)
 	{
-		unsigned int canales=controlador_audio->acc_canales_audio();
-		unsigned int i=0;
-
-		if(!canales_detenidos.size())
+		if(std::find(paused_channels.begin(),
+				paused_channels.end(),
+				i)==paused_channels.end())
 		{
-			controlador_audio->reanudar_sonido();
+			ca.get_channel(i).resume_sound();
 		}
-		else while(i < canales)
-		{
-			if(std::find(canales_detenidos.begin(),
-					canales_detenidos.end(),
-					i)==canales_detenidos.end())
-			{
-				DLibA::Canal_audio c=controlador_audio->obtener_canal(i);
-				c.reanudar();
-			}
-
-			++i;
-		}
+		++i;
 	}
 }

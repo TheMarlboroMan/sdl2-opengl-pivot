@@ -1,15 +1,15 @@
 DEP_HERRAMIENTAS_PROYECTO=\
-$(DIR_O_HERRAMIENTAS_PROYECTO)lector_txt.o \
-$(DIR_O_HERRAMIENTAS_PROYECTO)fichero_pares.o\
-$(DIR_O_HERRAMIENTAS_PROYECTO)controlador_argumentos.o \
-$(DIR_O_HERRAMIENTAS_PROYECTO)string_utilidades.o \
-$(DIR_O_HERRAMIENTAS_PROYECTO)ficheros_utilidades.o \
+$(DIR_O_HERRAMIENTAS_PROYECTO)text_reader.o \
+$(DIR_O_HERRAMIENTAS_PROYECTO)pair_file_parser.o\
+$(DIR_O_HERRAMIENTAS_PROYECTO)arg_controller.o \
+$(DIR_O_HERRAMIENTAS_PROYECTO)string_utils.o \
+$(DIR_O_HERRAMIENTAS_PROYECTO)ficheros_utils.o \
 $(DIR_O_HERRAMIENTAS_PROYECTO)dnot_parser.o \
 $(DIR_O_HERRAMIENTAS_PROYECTO)dnot_token.o \
-$(DIR_O_HERRAMIENTAS_PROYECTO)gestor_fuentes_ttf.o \
-$(DIR_O_HERRAMIENTAS_PROYECTO)localizador_base.o\
-$(DIR_O_HERRAMIENTAS_PROYECTO)tabla_sprites.o\
-$(DIR_O_HERRAMIENTAS_PROYECTO)tabla_animaciones.o 
+$(DIR_O_HERRAMIENTAS_PROYECTO)ttf_manager.o \
+$(DIR_O_HERRAMIENTAS_PROYECTO)localization_base.o\
+$(DIR_O_HERRAMIENTAS_PROYECTO)sprite_table.o\
+$(DIR_O_HERRAMIENTAS_PROYECTO)animation_table.o 
 
 DEP_CLASES_APP=\
 $(DIR_O)kernel_config.o\
@@ -29,4 +29,4 @@ $(DIR_O)fw_eventos.o \
 $(DIR_O)fw_audio.o \
 $(DIR_O)fw_cargador_recursos.o \
 $(DIR_O)fw_kernel_driver_interface.o \
-$(DIR_O)fw_configuracion_base.o \
+$(DIR_O)fw_base_config.o \

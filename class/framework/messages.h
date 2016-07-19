@@ -1,10 +1,10 @@
-#ifndef FRAMEWORK_EVENTOS_H
-#define FRAMEWORK_EVENTOS_H
+#ifndef DFRAMEWORK_MESSAGES_H
+#define DFRAMEWORK_MESSAGES_H
 
 #include <vector>
 #include <memory>
 
-namespace DFramework
+namespace dfw
 {
 
 /**
@@ -17,9 +17,6 @@ namespace DFramework
 * propios controladores. 
 */
 
-//F-f-f-f-forward :D!.
-class Interprete_eventos_interface;
-
 /**
 * Base para un evento. Un evento es una estructura que tendrá sus propios 
 * valores indicando lo que sea que haya ocurrido. Incluye un método virtual
@@ -27,69 +24,60 @@ class Interprete_eventos_interface;
 * intérprete "desmontar" cada evento para convertirlo en el tipo deseado.
 */
 
-struct Evento_framework_interface
+struct message_i
 {
-	virtual	int		tipo_evento() const=0;
+	virtual	int		get_type() const=0;
 };
 
 
 /**
-* Esto es la clase base para un interprete de eventos. La idea es que el 
+* Esto es la clase base para un reader de eventos. La idea es que el 
 * intérprete sea completamente opcional para la aplicación y que tenga estado.
 * Por ejemplo, podría tener una referencia a la configuración para poder
 * actualizar los valores de configuración en respuesta a eventos que vayan
 * llegando.
 */
 
-class Interprete_eventos_interface
+class message_reader_interface
 {
 	public:
 
-	virtual void		interpretar_evento(const Evento_framework_interface& ev)=0;
+	virtual void		consume(const message_i& ev)=0;
 };
 
-typedef std::unique_ptr<Evento_framework_interface> uptr_evento;
+typedef std::unique_ptr<message_i> uptr_message;
 
 /**
 * La cola de eventos es una clase separada que contiene el vector. Será propiedad
 * del director de estados pero se inyectará en los controladores al registrarlos.
 */
 
-class Cola_eventos
+class message_queue
 {
 	public:
 
-	size_t			size() const {return cola_eventos.size();}
+	size_t			size() const {return data.size();}
 
 	//Encola un evento para ser procesado al final del loop actual.
-	void			encolar_evento(uptr_evento& ev)
-	{
-		cola_eventos.push_back(std::move(ev));
-	}
+	void			insert(uptr_message& ev) {data.push_back(std::move(ev));}
 
 	//Envia un evento que será interpretado inmediatamente.
-	void			enviar_evento(uptr_evento& ev)
-	{
-		interprete->interpretar_evento(*ev);
-	}
+	void			read(uptr_message& ev) {reader->consume(*ev);}
 
 	//Realiza el proceso de la cola de eventos... La idea es que esto lo llame sólo el director de estados.
-	void			procesar_cola_completa(Interprete_eventos_interface& i)
+	void			process(message_reader_interface& i)
 	{
-		for(auto& ev : cola_eventos) i.interpretar_evento(*ev);
-		cola_eventos.clear();
+		for(auto& ev : data) i.consume(*ev);
+		data.clear();
 	}
 
 	//Establece un intérprete de eventos para el "enviar eventos". Lo hace el director al registrar el intérprete.
-	void			establecer_interprete(Interprete_eventos_interface& e)
-	{
-		interprete=&e;
-	}
+	void			set_reader(message_reader_interface& e){	reader=&e;}
 
 	private:
 
-	std::vector<std::unique_ptr<Evento_framework_interface>>	cola_eventos;
-	Interprete_eventos_interface *					interprete;
+	std::vector<std::unique_ptr<message_i>>		data;
+	message_reader_interface *			reader;
 	
 };
 
