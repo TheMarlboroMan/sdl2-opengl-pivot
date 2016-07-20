@@ -285,35 +285,35 @@ void main_controller::puntos_rotar(ldv::screen& screen, int x, int alpha)
 
 void main_controller::compuesta(ldv::screen& screen, int x)
 {
-	ldv::representation_agrupada r({x, 32}, true);
+	ldv::group_representation r({x, 32}, true);
 
 	ldv::box_representation * r4=new ldv::box_representation{ldv::polygon_representation::type::fill, {32, 32, 32, 32}, ldv::rgba8(0, 0, 255, 255)};
-	r.insertar_representacion(r4);
+	r.insert(r4);
 
 	ldv::ttf_representation * r3=new ldv::ttf_representation(font, ldv::rgba8(255, 255, 255, 255), "Hola");
 	r3->go_to(0, 64);
-	r.insertar_representacion(r3);
+	r.insert(r3);
 
 	ldv::bitmap_representation * r2=new ldv::bitmap_representation(v_manager.get_texture(1),
 		{64, 32, 64, 64}, {32,0,32,32}, ldv::raster_representation::sampling::complete);
 	r2->set_brush(16, 32);
-	r.insertar_representacion(r2);
+	r.insert(r2);
 
 	ldv::bitmap_representation * r1=new ldv::bitmap_representation(v_manager.get_texture(1),
 //		{-32, 32, 32, 32}, {32,32,32,32},
 		{-32, 32, 32, 32}, {32,32,32,32}, ldv::raster_representation::sampling::complete);
 	r1->set_alpha(64);
 	r1->set_blend(ldv::representation::blends::alpha);
-	r.insertar_representacion(r1);
+	r.insert(r1);
 
 	ldv::line_representation * r5=new ldv::line_representation(0, 0, 64, 64, ldv::rgba8(0, 255, 0, 255));
-	r.insertar_representacion(r5);
+	r.insert(r5);
 
 	ldv::polygon_representation * r6=new ldv::polygon_representation{ldv::polygon_representation::type::fill, {{32, 0},{0,32},{32,32}}, ldv::rgba8(255, 0, 0, 255)};
-	r.insertar_representacion(r6);
+	r.insert(r6);
 
 	ldv::point_representation * r7=new ldv::point_representation({{64,0},{92,0},{92,16},{64,16}}, ldv::rgba8(255, 64, 64, 255));
-	r.insertar_representacion(r7);
+	r.insert(r7);
 
 	r.go_to(x, 32);
 	if(angle)
