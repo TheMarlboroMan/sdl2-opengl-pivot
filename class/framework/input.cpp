@@ -2,6 +2,12 @@
 
 using namespace dfw;
 
+input::input(ldi::sdl_input& i)
+	:sdlinput(i)
+{
+
+}
+
 input::lookup_result input::get_lookup(int i) const
 {
 	//Esto puede dar problemas en el futuro si queremos usar el mismo
@@ -18,9 +24,9 @@ input::lookup_result input::get_lookup(int i) const
 	{
 		lookup_result resultado(lookup_result::types::none);
 
-		auto f=[&resultado, this, i](const t_map& mapa, int tipo)
+		auto f=[&resultado, this, i](const t_map& mapa, lookup_result::types t)
 		{
-			resultado.mapa=tipo;
+			resultado.type=t;
 			auto it=mapa.equal_range(i);
 			for(auto r=it.first; r!=it.second; ++r)
 			{
@@ -55,19 +61,19 @@ input::lookup_result input::get_lookup(int i) const
 bool input::is_input_down(int i) const
 {
 	lookup_result rl=get_lookup(i);
-	switch(rl.mapa)
+	switch(rl.type)
 	{
 		case lookup_result::types::keyboard:
 			for(auto val : rl.val) 
-				if(sdlinput.es_tecla_down(val.val)) return true;
+				if(sdlinput.is_key_down(val.val)) return true;
 		break;
 		case lookup_result::types::mouse:
 			for(auto val : rl.val) 
-				if(sdlinput.es_boton_down(val.val)) return true;
+				if(sdlinput.is_mouse_button_down(val.val)) return true;
 		break;
 		case lookup_result::types::joystick:
 			for(auto val : rl.val) 
-				if(sdlinput.es_joystick_boton_down(val.index, val.val)) return true;
+				if(sdlinput.is_joystick_button_down(val.index, val.val)) return true;
 		break;
 		case lookup_result::types::none: break;
 	}
@@ -78,19 +84,19 @@ bool input::is_input_down(int i) const
 bool input::is_input_up(int i) const
 {
 	lookup_result rl=get_lookup(i);
-	switch(rl.mapa)
+	switch(rl.type)
 	{
 		case lookup_result::types::keyboard:
 			for(auto val : rl.val) 
-				if(sdlinput.es_tecla_up(val.val)) return true;
+				if(sdlinput.is_key_up(val.val)) return true;
 		break;
 		case lookup_result::types::mouse:
 			for(auto val : rl.val) 
-				if(sdlinput.es_boton_up(val.val)) return true;
+				if(sdlinput.is_mouse_button_up(val.val)) return true;
 		break;
 		case lookup_result::types::joystick:
 			for(auto val : rl.val) 
-				if(sdlinput.es_joystick_boton_up(val.index, val.val)) return true;
+				if(sdlinput.is_joystick_button_up(val.index, val.val)) return true;
 		break;
 		case lookup_result::types::none: break;
 	}
@@ -101,21 +107,21 @@ bool input::is_input_up(int i) const
 bool input::is_input_pressed(int i) const
 {
 	lookup_result rl=get_lookup(i);
-	switch(rl.mapa)
+	switch(rl.type)
 	{
 		case lookup_result::types::keyboard:
 			for(auto val : rl.val) 
-				if(sdlinput.es_tecla_pulsada(val.val)) return true;
+				if(sdlinput.is_key_pressed(val.val)) return true;
 		break;
 		case lookup_result::types::mouse:
 			for(auto val : rl.val)
-				if(sdlinput.es_boton_pulsado(val.val)) return true;
+				if(sdlinput.is_mouse_button_pressed(val.val)) return true;
 		break;
 		case lookup_result::types::joystick:
 			for(auto val : rl.val) 
-				if(sdlinput.es_joystick_boton_pulsado(val.index, val.val)) return true;
+				if(sdlinput.is_joystick_button_pressed(val.index, val.val)) return true;
 		break;
-		case lookup_result::types::none; break;
+		case lookup_result::types::none: break;
 	}
 
 	return false;
@@ -136,7 +142,7 @@ void input::configure(input_pair i)
 	tinput ti={i.sdl_key, i.device_index};
 	auto par=std::make_pair(i.key, ti);
 
-	switch(i.tipo)
+	switch(i.type)
 	{
 		case input_pair::types::none:		break;
 		case input_pair::types::keyboard: 	keyboard_map.insert(par); break;
@@ -163,11 +169,11 @@ input::input_description input::get_current_description() const
 	{
 		return input_description{input_description::types::keyboard, sdlinput.get_key_down_index(), 0};
 	}
-	else if(sdlinput.is_event_mouse_click())
+	else if(sdlinput.is_event_mouse_button_down())
 	{
 		return input_description{input_description::types::mouse, sdlinput.get_mouse_button_down_index(), 0};
 	}
-	else if(sdlinput.is_joystick_button_down())
+	else if(sdlinput.is_event_joystick_button_down())
 	{
 		int cantidad=sdlinput.get_joysticks_size(), i=0;
 		while(i < cantidad)
@@ -215,9 +221,9 @@ input::input_description input::locate_description(int i) const
 
 input_pair input::from_description(const input::input_description& e, int key)
 {
-	input_pair::tipos t=input_pair::tipos::none;
+	input_pair::types t=input_pair::types::none;
 
-	switch(e.tipo)
+	switch(e.type)
 	{
 		case input_description::types::none: break;
 		case input_description::types::keyboard: t=input_pair::types::keyboard; break;

@@ -30,13 +30,13 @@ class base_config
 	int get_audio_buffers() const		{return token_from_path(get_key_audio_buffers());}
 	int get_audio_channels() const		{return token_from_path(get_key_audio_channels());}
 
-	void set_screen_double_buffer(int p_valor)	{configurar(get_key_screen_double_buffer(), p_valor);}
-	void set_audio_volume(int p_valor)		{configurar(get_key_audio_volume(), p_valor);}
-	void set_music_volume(int p_valor)		{configurar(get_key_music_volume(), p_valor);}
-	void set_audio_ratio(int p_valor)		{configurar(get_key_audio_ratio(), p_valor);}
-	void set_audio_out(int p_valor)			{configurar(get_key_audio_out(), p_valor);}
-	void set_audio_buffers(int p_valor)		{configurar(get_key_audio_buffers(), p_valor);}
-	void set_audio_channels(int p_valor)		{configurar(get_key_audio_channels(), p_valor);}
+	void set_screen_double_buffer(int p_valor)	{set(get_key_screen_double_buffer(), p_valor);}
+	void set_audio_volume(int p_valor)		{set(get_key_audio_volume(), p_valor);}
+	void set_music_volume(int p_valor)		{set(get_key_music_volume(), p_valor);}
+	void set_audio_ratio(int p_valor)		{set(get_key_audio_ratio(), p_valor);}
+	void set_audio_out(int p_valor)			{set(get_key_audio_out(), p_valor);}
+	void set_audio_buffers(int p_valor)		{set(get_key_audio_buffers(), p_valor);}
+	void set_audio_channels(int p_valor)		{set(get_key_audio_channels(), p_valor);}
 
 	void save();
 
@@ -59,8 +59,8 @@ class base_config
 	// A implementar por clases que la extiendan...
 
 		//Estos simplemente devuelven claves de configuración.
+	virtual std::string 				generate_file_version() const=0;
 	virtual std::string 				get_key_file_version() const=0;
-	virtual std::string 				get_file_version() const=0;
 	virtual std::string 				get_key_screen_double_buffer() const=0;
 	virtual std::string 				get_key_audio_volume() const=0;
 	virtual std::string 				get_key_music_volume() const=0;

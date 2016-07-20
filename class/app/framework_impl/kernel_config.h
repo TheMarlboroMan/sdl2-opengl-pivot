@@ -2,33 +2,32 @@
 #define KERNEL_CONFIG_H
 
 #include "app_config.h"
-#include "../../framework/kernel_driver_interface.h"
-#include <input/controles_sdl/controles_sdl.h>
+#include "../../framework/kernel_config_interface.h"
 
-namespace App
+namespace app
 {
 
-class Kernel_config
-	:public DFramework::Kernel_driver_interface
+class kernel_config
+	:public dfw::kernel_config_interface
 {
 	public:
 
-	Kernel_config(const App_config&);
+	kernel_config(const app_config&);
 
-	virtual std::vector<std::string> 	obtener_entradas_audio() const;
-	virtual std::vector<std::string> 	obtener_entradas_musica() const;
-	virtual std::vector<std::string> 	obtener_entradas_texturas() const;
-	virtual std::vector<std::string> 	obtener_entradas_superficies() const;
+	virtual std::vector<std::string> 	get_sound_entries() const;
+	virtual std::vector<std::string> 	get_music_entries() const;
+	virtual std::vector<std::string> 	get_texture_entries() const;
+	virtual std::vector<std::string> 	get_surface_entries() const;
 
 	//Información para ventana.
-	virtual DFramework::Info_ventana	obtener_info_ventana() const;
+	virtual dfw::window_info		get_window_info() const;
 
 	//Información del input.
-	virtual std::vector<DFramework::Par_input> 	obtener_pares_input() const;
+	virtual std::vector<dfw::input_pair> 	get_input_pairs() const;
 
 	private:
 
-	const App_config&			config;
+	const app_config&			config;
 };
 
 }

@@ -40,7 +40,7 @@ void state_driver_interface::register_controller(int index, controller_interface
 bool state_driver_interface::loop(dfw::kernel& kernel)
 {
 	//Aquí se mide el tiempo desde el último paso por este loop...
-	kernel.start_loop_step();
+	kernel.init_loop_step();
 	float delta_step=kernel.get_delta_step();
 
 	auto& input_i=kernel.get_input();
@@ -51,7 +51,7 @@ bool state_driver_interface::loop(dfw::kernel& kernel)
 	ci->preloop(input_i, delta_step);
 
 	//Aquí se consume el tiempo desde el último paso en bloques de "delta_step".
-	while(kernel.consume_message(delta_step))
+	while(kernel.consume_loop(delta_step))
 	{
 		input_i().loop();
 

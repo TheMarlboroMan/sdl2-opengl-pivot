@@ -1,10 +1,10 @@
 #include "resource_loader.h"
-#include "kernel_driver_interface.h"
+#include "kernel_config_interface.h"
 #include <source/string_utils.h>
 
 using namespace dfw;
 
-resource_loader::resource_loader(ldv::resource_manager& vrm, lda::resorce_manager& arm)
+resource_loader::resource_loader(ldv::resource_manager& vrm, lda::resource_manager& arm)
 	:video_m(vrm), audio_m(arm), screen(nullptr)
 {
 
@@ -15,14 +15,13 @@ void resource_loader::process(const std::vector<std::string>& entries, void (res
 	const char delim='\t';
 	for(auto& line : entries)
 	{
-		//TODO: Try and catch here to show the complete line that fails.
 		try
 		{
 			(this->*process_values)(tools::explode(line, delim));
 		}
 		catch(std::exception& e)
 		{
-			throw std::runtime_error(e.what()+" in line "+line);
+			throw std::runtime_error(e.what()+std::string(" in line ")+line);
 		}
 	}
 }
@@ -35,7 +34,7 @@ void resource_loader::generate_textures(const std::vector<std::string>& resource
 	}
 	catch(std::exception& e)
 	{
-		throw std::runtime_error("unable to load textures: "+e.what());
+		throw std::runtime_error(std::string("unable to load textures: ")+e.what());
 	}
 }
 
@@ -48,7 +47,7 @@ void resource_loader::generate_surfaces(const std::vector<std::string>& resource
 	}
 	catch(std::exception& e)
 	{
-		throw std::runtime_error("unable to load surfaces: "+e.what());
+		throw std::runtime_error(std::string("unable to load surfaces: ")+e.what());
 	}
 }
 
@@ -56,11 +55,11 @@ void resource_loader::generate_sounds(const std::vector<std::string>& resources)
 {
 	try
 	{
-		process(resources, &resource_loader::process_sounds);
+		process(resources, &resource_loader::process_sound);
 	}
 	catch(std::exception& e)
 	{
-		throw std::runtime_error("unable to load sounds: "+e.what());
+		throw std::runtime_error(std::string("unable to load sounds: ")+e.what());
 	}
 }
 
@@ -72,11 +71,11 @@ void resource_loader::generate_music(const std::vector<std::string>& resources)
 	}
 	catch(std::exception& e)
 	{
-		throw std::runtime_error("unable to load music: "+e.what());
+		throw std::runtime_error(std::string("unable to load music: ")+e.what());
 	}
 }
 
-void resource_loader::process_textures(const std::vector<std::string>& values)
+void resource_loader::process_texture(const std::vector<std::string>& values)
 {
 	if(values.size()!=2) 
 	{
@@ -91,7 +90,7 @@ void resource_loader::process_textures(const std::vector<std::string>& values)
 	video_m.insert(indice, t);
 }
 
-void resource_loader::process_surfaces(const std::vector<std::string>& values)
+void resource_loader::process_surface(const std::vector<std::string>& values)
 {
 	if(values.size()!=6)
 	{
@@ -116,7 +115,7 @@ void resource_loader::process_surfaces(const std::vector<std::string>& values)
 }
 
 
-void resource_loader::process_sounds(const std::vector<std::string>& values)
+void resource_loader::process_sound(const std::vector<std::string>& values)
 {
 	if(values.size()!=2) 
 	{

@@ -8,7 +8,7 @@ audio::audio(lda::audio_controller& a)
 
 }
 
-void audio::pausar_active()
+void audio::pause_active()
 {
 	unsigned int canales=ac.get_requested_channels();
 	unsigned int i=0;
@@ -27,9 +27,9 @@ void audio::pausar_active()
 
 /*Todos los sonidos vuelven a reproducirse...*/
 
-void audio::unpause()
+void audio::resume()
 {
-	ca.resume_sound();
+	ac.resume_sound();
 	paused_channels.clear();
 }
 
@@ -40,22 +40,22 @@ void audio::resume_active()
 {
 	for(unsigned int i : paused_channels)
 	{
-		ca.get_channel(i).resume();
+		ac.get_channel(i).resume();
 	}
 	
-	paused_channels.clear()
+	paused_channels.clear();
 }
 
 /*Reanuda los sonidos pausados que no fueran guardados mediante pausar_activos.*/
 
 void audio::resume_inactive()
 {
-	unsigned int canales=ca.get_requested_channels();
+	unsigned int canales=ac.get_requested_channels();
 	unsigned int i=0;
 
 	if(!paused_channels.size())
 	{
-		ca.resume_sound();
+		ac.resume_sound();
 	}
 	else while(i < canales)
 	{
@@ -63,7 +63,7 @@ void audio::resume_inactive()
 				paused_channels.end(),
 				i)==paused_channels.end())
 		{
-			ca.get_channel(i).resume_sound();
+			ac.get_channel(i).resume();
 		}
 		++i;
 	}

@@ -24,7 +24,7 @@ class state_controller
 	{}
 
 
-	void					set_next(int v)
+	void					set(int v)
 	{
 		if(!f_validate(v)) throw std::runtime_error("invalid state for state_controller");
 		next=v;

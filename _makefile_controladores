@@ -11,13 +11,13 @@ DIR_CLASES_EVENTOS=./class/app/eventos/
 #Controladores...
 ################################################################################
 
-$(DIR_O)director_estados.o :\
-$(DIR_O)controlador_principal.o \
-$(DIR_CONTROLADORES)director_estados.h \
-$(DIR_CONTROLADORES)director_estados.cpp
-	$(CC) $(CFLAGS) $(INCLUDES) $(DIR_CONTROLADORES)director_estados.cpp -o $(DIR_O)director_estados.o 
+$(DIR_O)state_driver.o :\
+$(DIR_O)main_controller.o \
+$(DIR_CONTROLADORES)state_driver.h \
+$(DIR_CONTROLADORES)state_driver.cpp
+	$(CC) $(CFLAGS) $(INCLUDES) $(DIR_CONTROLADORES)state_driver.cpp -o $(DIR_O)state_driver.o 
 
-$(DIR_O)controlador_principal.o :\
-$(DIR_CONTROLADORES)principal.h \
-$(DIR_CONTROLADORES)principal.cpp
-	$(CC) $(CFLAGS) $(INCLUDES) $(DIR_CONTROLADORES)principal.cpp -o $(DIR_O)controlador_principal.o 
+$(DIR_O)main_controller.o :\
+$(DIR_CONTROLADORES)main.h \
+$(DIR_CONTROLADORES)main.cpp
+	$(CC) $(CFLAGS) $(INCLUDES) $(DIR_CONTROLADORES)main.cpp -o $(DIR_O)main_controller.o 

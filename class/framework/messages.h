@@ -62,7 +62,7 @@ class message_queue
 	void			insert(uptr_message& ev) {data.push_back(std::move(ev));}
 
 	//Envia un evento que será interpretado inmediatamente.
-	void			read(uptr_message& ev) {reader->consume(*ev);}
+	void			consume(uptr_message& ev) {reader->consume(*ev);}
 
 	//Realiza el proceso de la cola de eventos... La idea es que esto lo llame sólo el director de estados.
 	void			process(message_reader_interface& i)

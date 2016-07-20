@@ -1,116 +1,99 @@
 #ifndef APP_CONFIGURACION_H
 #define APP_CONFIGURACION_H
 
-#include "../../framework/configuracion_base.h"
+#include "../../framework/base_config.h"
 #include "../../framework/input.h"
 
 #include <iostream>
 
-#ifdef WINCOMPIL
-/* Localización del parche mingw32... Esto debería estar en otro lado, supongo. */
-#include <herramientas/herramientas/herramientas.h>
-#endif
-
-namespace App
+namespace app
 {
 
-class App_config:
-	public DFramework::Configuracion_base
+class app_config:
+	public dfw::base_config
 {
 	////////////////////////////////
 	// Interface pública.
 
 	public:
 
-	struct input_jugador
+	app_config();
+
+
+	struct user_input
 	{
-		enum devs{teclado=0, joystick=1, raton=2, nada=3};
-		int tipo, device, codigo;
+		enum devs{keyboard=0, joystick=1, mouse=2, none=3};
+		int type, device, code;
 	};
 
 	//Traduce el tipo del framework al de la configuración.
-	static input_jugador fw_a_config(DFramework::Input::Entrada& e)
+	static user_input fw_to_config(dfw::input::input_description& e)
 	{
-		int tipo=input_jugador::nada;
+		int type=user_input::none;
 
-		switch(e.tipo)
+		switch(e.type)
 		{
-			case DFramework::Input::Entrada::ttipo::teclado: 	tipo=input_jugador::teclado; break;
-			case DFramework::Input::Entrada::ttipo::joystick: 	tipo=input_jugador::joystick; break;
-			case DFramework::Input::Entrada::ttipo::raton: 		tipo=input_jugador::raton; break;
-			case DFramework::Input::Entrada::ttipo::nada: 		tipo=input_jugador::nada; break;
+			case dfw::input::input_description::types::keyboard: 	type=user_input::keyboard; break;
+			case dfw::input::input_description::types::joystick: 	type=user_input::joystick; break;
+			case dfw::input::input_description::types::mouse:	type=user_input::mouse; break;
+			case dfw::input::input_description::types::none: 	type=user_input::none; break;
 		}
 
-		return input_jugador{tipo, e.dispositivo, e.codigo};
+		return user_input{type, e.device, e.code};
 	};
 
-	int acc_w_logica_pantalla() const {return token_por_ruta(CLAVE_W_LOGICA_PANTALLA);}
-	int acc_h_logica_pantalla() const {return token_por_ruta(CLAVE_H_LOGICA_PANTALLA);}
-	int acc_w_fisica_pantalla() const {return token_por_ruta(CLAVE_W_FISICA_PANTALLA);}
-	int acc_h_fisica_pantalla() const {return token_por_ruta(CLAVE_H_FISICA_PANTALLA);}
+	int get_w_screen_logical() const {return token_from_path("config:video:window_w_logical");}
+	int get_h_screen_logical() const {return token_from_path("config:video:window_h_logical");}
+	int get_w_screen_px() const {return token_from_path("config:video:window_w_px");}
+	int get_h_screen_px() const {return token_from_path("config:video:window_h_px");}
 
-	input_jugador acc_izquierda() const	{return token_por_ruta_input("izquierda");}
-	input_jugador acc_derecha() const 	{return token_por_ruta_input("derecha");}
-	input_jugador acc_arriba() const 	{return token_por_ruta_input("arriba");}
-	input_jugador acc_abajo() const		{return token_por_ruta_input("abajo");}
-	input_jugador acc_espacio() const	{return token_por_ruta_input("espacio");}
-	input_jugador acc_zoom_mas() const	{return token_por_ruta_input("zoom_menos");}
-	input_jugador acc_zoom_menos() const	{return token_por_ruta_input("zoom_mas");}
-	input_jugador acc_num_1() const	{return token_por_ruta_input("num_1");}
-	input_jugador acc_num_2() const	{return token_por_ruta_input("num_2");}
-	input_jugador acc_num_3() const	{return token_por_ruta_input("num_3");}
-	input_jugador acc_key_a() const	{return token_por_ruta_input("key_a");}
-	input_jugador acc_key_s() const	{return token_por_ruta_input("key_s");}
+	user_input get_left() const	{return token_from_path_input("left");}
+	user_input get_right() const 	{return token_from_path_input("right");}
+	user_input get_up() const 	{return token_from_path_input("up");}
+	user_input get_down() const		{return token_from_path_input("down");}
+	user_input get_space() const	{return token_from_path_input("space");}
+	user_input get_zoom_more() const	{return token_from_path_input("zoom_more");}
+	user_input get_zoom_less() const	{return token_from_path_input("zoom_less");}
+	user_input get_num_1() const	{return token_from_path_input("num_1");}
+	user_input get_num_2() const	{return token_from_path_input("num_2");}
+	user_input get_num_3() const	{return token_from_path_input("num_3");}
+	user_input get_key_a() const	{return token_from_path_input("key_a");}
+	user_input get_key_s() const	{return token_from_path_input("key_s");}
 
-	void mut_w_logica_pantalla(int p_valor) {configurar(CLAVE_W_LOGICA_PANTALLA, p_valor);}
-	void mut_h_logica_pantalla(int p_valor) {configurar(CLAVE_H_LOGICA_PANTALLA, p_valor);}
-	void mut_w_fisica_pantalla(int p_valor) {configurar(CLAVE_W_FISICA_PANTALLA, p_valor);}
-	void mut_h_fisica_pantalla(int p_valor) {configurar(CLAVE_H_FISICA_PANTALLA, p_valor);}
-
-	App_config();
+	void set_w_screen_logical(int p_valor) {set("config:video:window_w_logical", p_valor);}
+	void set_h_screen_logical(int p_valor) {set("config:video:window_h_logical", p_valor);}
+	void set_w_screen_px(int p_valor) {set("config:video:window_w_px", p_valor);}
+	void set_h_screen_px(int p_valor) {set("config:video:window_h_px", p_valor);}
 
 	private:
 
-	input_jugador token_por_ruta_input(const std::string& tipo) const
+	user_input token_from_path_input(const std::string& tipo) const
 	{	
-		const auto& tok=token_por_ruta("config:input:"+tipo);
-		return input_jugador{tok[0], tok[1], tok[2]};
+		const auto& tok=token_from_path("config:input:"+tipo);
+		return user_input{tok[0], tok[1], tok[2]};
 	}
-
-	////////////////////////////////////
-	// Definiciones...
-
-	static const std::string CLAVE_W_LOGICA_PANTALLA;
-	static const std::string CLAVE_H_LOGICA_PANTALLA;
-	static const std::string CLAVE_W_FISICA_PANTALLA;
-	static const std::string CLAVE_H_FISICA_PANTALLA;
-	static const std::string CLAVE_AYUDA_ACTIVA;
-	static const std::string CLAVE_DEBUG_ACTIVO;
 
 	////////////////////////////////////
 	// Implementacion...
 
 	protected: 
 
-	std::string obtener_clave_version_archivo() const {return "config:meta:v";}
-	std::string obtener_version_archivo() const {return "1";}
-	std::string obtener_clave_modo_pantalla() const {return "config:video:modo_pantalla";}
-	std::string obtener_clave_modo_hardware() const {return "config:video:modo_hardware";}
-	std::string obtener_clave_pantalla_doble_buffer() const {return "config:video:doble_buffer";}
-	std::string obtener_clave_pantalla_anyformat() const {return "config:video:pantalla_anyformat";}
-	std::string obtener_clave_volumen_audio() const {return "config:audio:volumen_audio";}
-	std::string obtener_clave_volumen_musica() const {return "config:audio:volumen_musica";}
-	std::string obtener_clave_audio_ratio() const {return "config:audio:audio_ratio";}
-	std::string obtener_clave_audio_buffers() const {return "config:audio:audio_buffers";}
-	std::string obtener_clave_audio_salidas() const {return "config:audio:audio_salidas";}
-	std::string obtener_clave_audio_canales() const {return "config:audio:audio_canales";}
+	virtual std::string generate_file_version() const {return "1";}
+	virtual std::string get_key_file_version() const {return "config:meta:v";}
+	virtual std::string get_key_screen_double_buffer() const {return "config:video:double_buffer";}
+	virtual std::string get_key_audio_volume() const {return "config:audio:audio_volume";}
+	virtual std::string get_key_music_volume() const {return "config:audio:music_volume";}
+	virtual std::string get_key_audio_ratio() const {return "config:audio:audio_ratio";}
+	virtual std::string get_key_audio_buffers() const {return "config:audio:audio_buffers";}
+	virtual std::string get_key_audio_out() const {return "config:audio:audio_out";}
+	virtual std::string get_key_audio_channels() const {return "config:audio:audio_channels";}
 
 	///////////////////////////////////
 	// Propiedades.
 
 	private:
 
-	std::string obtener_ruta_archivo() const {return "data/config/configuracion.dnot";}
+	std::string get_file_path() const {return "data/config/config.dnot";}
 };
 
 }

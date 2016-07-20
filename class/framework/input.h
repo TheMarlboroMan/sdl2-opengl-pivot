@@ -3,8 +3,8 @@
 
 #include <map>
 #include <vector>
-#include <input/sdl_controls/sdl_controls.h>
-#include "kernel_driver_interface.h"
+#include <input/sdl_input/sdl_input.h>
+#include "kernel_config_interface.h"
 
 /*Abstrae los sistemas de input usando la clase Controles_SDL. Cada input del
 enum de turno se puede asignar a uno o más values SDLK_xxx, según lo mismo
@@ -23,14 +23,17 @@ class input
 
 	public:
 
+	
+
 	//Public structure to expose a configured input (for example button 3 of the 2nd joystick.
 	struct input_description
 	{
-		enum class ttype {none, keyboard, mouse, joystick};
+		enum class types {none, keyboard, mouse, joystick};
 		types		type;
 		int		code, device;
 	};
 
+					input(ldi::sdl_input&);
 	void 				configure(const std::vector<input_pair>&);
 	void 				configure(input_pair);
 	void				clear(int);
@@ -70,8 +73,9 @@ class input
 
 	private:
 
+	ldi::sdl_input&	 		sdlinput;
+
 	lookup_result 			get_lookup(int) const;
-	DLibI::Controles_SDL 		sdlinput;
 };
 
 }

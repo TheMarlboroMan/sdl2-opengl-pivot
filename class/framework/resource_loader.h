@@ -45,7 +45,7 @@ class resource_loader
 {
 	public:
 	
-	resource_loader(ldv::resource_manager&, lda::resorce_manager);
+	resource_loader(ldv::resource_manager&, lda::resource_manager&);
 
 	void generate_textures(const std::vector<std::string>&);
 	void generate_surfaces(const std::vector<std::string>&, ldv::screen &pantalla);
@@ -55,12 +55,12 @@ class resource_loader
 	private:
 
 	void process_music(const std::vector<std::string>&);
-	void process_sounds(const std::vector<std::string>&);
-	void process_textures(const std::vector<std::string>&);
-	void process_surfaces(const std::vector<std::string>&);
+	void process_sound(const std::vector<std::string>&);
+	void process_texture(const std::vector<std::string>&);
+	void process_surface(const std::vector<std::string>&);
 	void process(const std::vector<std::string>& entradas, void (resource_loader::*)(const std::vector<std::string>&));
 
-	ldv::resorce_manager&	video_m;
+	ldv::resource_manager&	video_m;
 	lda::resource_manager&	audio_m;
 
 	

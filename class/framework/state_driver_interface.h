@@ -50,7 +50,7 @@ class state_driver_interface
 
 	private:
 
-	bool					loop(dfw::Kernel&);
+	bool					loop(dfw::kernel&);
 	controller_interface *			ci;
 	message_reader_interface *		mri;
 

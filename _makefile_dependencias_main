@@ -16,17 +16,15 @@ $(DIR_O)kernel_config.o\
 $(DIR_O)app_config.o\
 
 DEP_CONTROLADORES=\
-$(DIR_O)director_estados.o \
-$(DIR_O)controlador_principal.o \
+$(DIR_O)state_driver.o \
+$(DIR_O)main_controller.o \
 
 DEP_FRAMEWORK=\
 $(DIR_O)fw_kernel.o \
 $(DIR_O)fw_input.o \
-$(DIR_O)fw_director_estados_interface.o \
-$(DIR_O)fw_estados.o \
-$(DIR_O)fw_controlador_interface.o \
-$(DIR_O)fw_eventos.o \
+$(DIR_O)fw_state_driver_interface.o \
+$(DIR_O)fw_state_controller.o \
+$(DIR_O)fw_messages.o \
 $(DIR_O)fw_audio.o \
-$(DIR_O)fw_cargador_recursos.o \
-$(DIR_O)fw_kernel_driver_interface.o \
+$(DIR_O)fw_resource_loader.o \
 $(DIR_O)fw_base_config.o \
