@@ -1,13 +1,19 @@
 #include "kernel_config.h"
-#include "input.h"
 
+//std
 #include <iostream>
 
+//sdl
 #include <SDL2/SDL.h>
 
+//libdansdl2
 #include <input/sdl_input/sdl_input.h>
 
+//tools
 #include <class/text_reader.h>
+
+//local
+#include "input.h"
 
 using namespace app;
 

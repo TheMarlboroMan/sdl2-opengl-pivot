@@ -1,7 +1,8 @@
 #include "main.h"
 
-#include "../app/framework_impl/input.h"
 #include <templates/compatibility_patches.h>
+
+#include "input.h"
 
 using namespace app;
 

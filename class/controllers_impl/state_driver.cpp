@@ -1,6 +1,9 @@
 #include "state_driver.h"
 
+//std
 #include <algorithm>
+
+//tools
 #include <class/dnot_parser.h>
 #include <source/string_utils.h>
 
@@ -8,9 +11,9 @@ using namespace app;
 
 extern ldt::log LOG;
 
-state_driver::state_driver(dfw::kernel& kernel, app::app_config& c, ldt::log& log)
+state_driver::state_driver(dfw::kernel& kernel, app::app_config& c)
 	:state_driver_interface(t_states::state_main, std::function<bool(int)>([](int v){return v > state_main && v < state_max;})),
-	config(c), log(log)
+	config(c), log(kernel.get_log())
 {
 	prepare_video(kernel);
 	register_fonts();

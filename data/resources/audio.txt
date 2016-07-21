@@ -1,6 +1,6 @@
 #indice ruta
 
 #Sonidos motor... estos no debemos cambiarlos porque se usan en código!
-#1	data/sonidos/chocar.ogg
+#1	data/sounds/chocar.ogg
 
 #Sonidos de aplicacion...

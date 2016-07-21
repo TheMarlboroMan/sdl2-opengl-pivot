@@ -1,0 +1,3 @@
+#indice	ruta	transparencia
+1	data/graphics/sprites.png
+2	data/graphics/lens_flare.png

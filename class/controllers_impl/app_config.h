@@ -1,10 +1,13 @@
 #ifndef APP_CONFIGURACION_H
 #define APP_CONFIGURACION_H
 
-#include "../../framework/base_config.h"
-#include "../../framework/input.h"
-
+//std
 #include <iostream>
+
+//framework
+#include <class/base_config.h>
+#include <class/input.h>
+
 
 namespace app
 {
@@ -81,7 +84,7 @@ class app_config:
 	virtual std::string generate_file_version() const {return "1";}
 	virtual std::string get_key_file_version() const {return "config:meta:v";}
 	virtual std::string get_key_screen_double_buffer() const {return "config:video:double_buffer";}
-	virtual std::string get_key_audio_volume() const {return "config:audio:audio_volume";}
+	virtual std::string get_key_sound_volume() const {return "config:audio:sound_volume";}
 	virtual std::string get_key_music_volume() const {return "config:audio:music_volume";}
 	virtual std::string get_key_audio_ratio() const {return "config:audio:audio_ratio";}
 	virtual std::string get_key_audio_buffers() const {return "config:audio:audio_buffers";}

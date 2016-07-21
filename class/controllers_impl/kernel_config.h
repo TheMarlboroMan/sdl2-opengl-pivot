@@ -1,8 +1,11 @@
 #ifndef KERNEL_CONFIG_H
 #define KERNEL_CONFIG_H
 
+//Framework
+#include <class/kernel_config_interface.h>
+
+//Local
 #include "app_config.h"
-#include "../../framework/kernel_config_interface.h"
 
 namespace app
 {

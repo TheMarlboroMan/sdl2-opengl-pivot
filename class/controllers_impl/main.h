@@ -1,15 +1,18 @@
 #ifndef MAIN_CONTROLLER_H
 #define MAIN_CONTROLLER_H
 
-//Dependencias...
-#include "states.h"
-#include "../framework/controller_interface.h"
-
-//Específicos de la aplicación...
-#include <class/ttf_manager.h>
-#include <templates/compatibility_patches.h>
+//Library.
 #include <def_video.h>
 
+//Tools.
+#include <class/ttf_manager.h>
+#include <templates/compatibility_patches.h>
+
+//Framework.
+#include <class/controller_interface.h>
+
+//Local.
+#include "states.h"
 
 namespace app
 {
