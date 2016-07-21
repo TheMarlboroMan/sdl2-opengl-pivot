@@ -1,15 +1,15 @@
-#include "director_estados.h"
+#include "state_driver.h"
 
 #include <algorithm>
 #include <class/dnot_parser.h>
 #include <source/string_utilidades.h>
 
-using namespace App;
+using namespace app;
 
 extern DLibH::Log_base LOG;
 
-Director_estados::Director_estados(DFramework::Kernel& kernel, App::App_config& c, DLibH::Log_base& log)
-	:Director_estados_interface(t_estados::principal, std::function<bool(int)>([](int v){return v > estado_min && v < estado_max;})),
+state_driver::state_driver(DFramework::Kernel& kernel, App::App_config& c, DLibH::Log_base& log)
+	:state_driver_interface(t_estados::principal, std::function<bool(int)>([](int v){return v > estado_min && v < estado_max;})),
 	config(c), log(log)
 {
 	preparar_video(kernel);
@@ -18,7 +18,7 @@ Director_estados::Director_estados(DFramework::Kernel& kernel, App::App_config& 
 	virtualizar_joysticks(kernel.acc_input());
 }
 
-void Director_estados::preparar_video(DFramework::Kernel& kernel)
+void state_driver::preparar_video(DFramework::Kernel& kernel)
 {
 	auto& pantalla=kernel.acc_pantalla();
 
@@ -32,14 +32,14 @@ void Director_estados::preparar_video(DFramework::Kernel& kernel)
 	pantalla.establecer_modo_ventana(config.acc_modo_pantalla());
 }
 
-void Director_estados::registrar_controladores(DFramework::Kernel& kernel)
+void state_driver::registrar_controladores(DFramework::Kernel& kernel)
 {
 	controlador_principal.reset(new Controlador_principal(log, fuentes));
 
 	registrar_controlador(t_estados::principal, *controlador_principal);
 }
 
-void Director_estados::preparar_cambio_estado(int deseado, int actual)
+void state_driver::preparar_cambio_estado(int deseado, int actual)
 {
 	switch(deseado)
 	{
@@ -48,7 +48,7 @@ void Director_estados::preparar_cambio_estado(int deseado, int actual)
 	}
 }
 
-void Director_estados::input_comun(DFramework::Input& input, float delta)
+void state_driver::input_comun(DFramework::Input& input, float delta)
 {
 	if(input.es_nuevo_joystick_conectado())
 	{
@@ -57,12 +57,12 @@ void Director_estados::input_comun(DFramework::Input& input, float delta)
 	}
 }
 
-void Director_estados::paso_comun(float delta)
+void state_driver::paso_comun(float delta)
 {
 
 }
 
-void Director_estados::virtualizar_joysticks(DFramework::Input& input)
+void state_driver::virtualizar_joysticks(DFramework::Input& input)
 {
 	for(int i=0; i < input.obtener_cantidad_joysticks(); ++i)
 	{
@@ -72,7 +72,7 @@ void Director_estados::virtualizar_joysticks(DFramework::Input& input)
 	}
 }
 
-void Director_estados::registrar_fuentes()
+void state_driver::registrar_fuentes()
 {	
 	using namespace Herramientas_proyecto;
 
