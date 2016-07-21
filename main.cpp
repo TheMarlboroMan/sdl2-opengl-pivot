@@ -47,8 +47,10 @@ int main(int argc, char ** argv)
 		log_app<<"init kernel..."<<std::endl;
 		kernel.init(kconfig, config);
 
-		log_app<<"init state driver..."<<std::endl;
+		log_app<<"create state driver..."<<std::endl;
 		state_driver APP(kernel, config);
+
+		log_app<<"init state driver..."<<std::endl;
 		APP.init(kernel);
 
 		log_app<<"finish main proccess"<<std::endl;

@@ -19,10 +19,13 @@ state_driver::state_driver(dfw::kernel& kernel, app::app_config& c)
 	register_fonts();
 	register_controllers(kernel);
 	virtualize_input(kernel.get_input());
+	
+	log<<"state driver fully constructed"<<std::endl;
 }
 
 void state_driver::prepare_video(dfw::kernel& kernel)
 {
+	log<<"preparing app video configuration..."<<std::endl;
 	auto& screen=kernel.get_screen();
 
 	int wf=config.get_w_screen_px(), 
@@ -31,11 +34,13 @@ void state_driver::prepare_video(dfw::kernel& kernel)
 		hl=config.get_h_screen_logical();
 
 	screen.init(wf, hf);
+
 	screen.set_logical_size(wl, hl);
 }
 
 void state_driver::register_controllers(dfw::kernel& kernel)
 {
+	log<<"registering controllers..."<<std::endl;
 	c_main.reset(new main_controller(kernel.get_video_resource_manager(), log, fonts));
 
 	register_controller(t_states::state_main, *c_main);
@@ -66,7 +71,9 @@ void state_driver::common_step(float delta)
 
 void state_driver::virtualize_input(dfw::input& input)
 {
-	for(int i=0; i < input().get_joysticks_size(); ++i)
+	log<<"trying to virtualize "<<input().get_joysticks_size()<<" controllers..."<<std::endl;
+
+	for(size_t i=0; i < input().get_joysticks_size(); ++i)
 	{
 		input().virtualize_joystick_hats(i);
 		input().virtualize_joystick_axis(i,15000);
@@ -76,6 +83,8 @@ void state_driver::virtualize_input(dfw::input& input)
 
 void state_driver::register_fonts()
 {	
+	log<<"registering fonts..."<<std::endl;
+
 	using namespace tools;
 
 	auto v=explode_lines_from_file("data/resources/fonts.txt");
