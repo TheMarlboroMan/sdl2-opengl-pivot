@@ -10,6 +10,7 @@
 
 //Framework.
 #include <class/controller_interface.h>
+#include <class/audio.h>
 
 //Local.
 #include "states.h"
@@ -22,11 +23,11 @@ class main_controller:
 {
 	public:
 
-						main_controller(ldv::resource_manager&, ldt::log&, const tools::ttf_manager&);
+						main_controller(ldv::resource_manager&, lda::resource_manager&, ldt::log&, const tools::ttf_manager&, dfw::audio&);
 
-	virtual void 				preloop(dfw::input& input, float delta);
+	virtual void 				preloop(dfw::input& input, float delta, int fps);
 	virtual void 				loop(dfw::input& input, float delta);
-	virtual void 				postloop(dfw::input& input, float delta);
+	virtual void 				postloop(dfw::input& input, float delta, int fps);
 	virtual void 				draw(ldv::screen& screen);
 	virtual void 				awake();
 	virtual void 				slumber();
@@ -53,8 +54,10 @@ class main_controller:
 	void					compuesta(ldv::screen& screen, int x);
 
 	ldv::resource_manager&			v_manager;
+	lda::resource_manager&			a_manager;
 	ldt::log&				log;
 	const ldv::ttf_font&			font;
+	dfw::audio&				audio_sys;
 
 	int					angle,
 						alpha;
@@ -63,6 +66,7 @@ class main_controller:
 	ldv::box_representation			moving_box;
 	ldv::point_representation 		moving_points;
 	ldv::line_representation	 	moving_line;
+	ldv::ttf_representation			fps_rep;
 
 	class ogl_text
 	{

@@ -1,10 +1,7 @@
 # sdl2-opengl-pivot
-Client code to verify future adaptation of libdansdl2 to opengl rendering
+
+Client code to verify the new interface for the libdansdl2 and the rest of its ecosystem.
 
 # TODO:
 
-- Finish translating.
-- Add sound and music capability testing.
 - Add specific controllers for specific testing purposes (menu, view composer...)
-- Separate framework from the rest of the project.
-

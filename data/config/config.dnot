@@ -32,6 +32,6 @@ config:{
 	}, meta:{
 		v:1
 	}, video:{
-		double_buffer:1, window_h_logical:800, window_h_px:800, window_w_px:1200, window_w_logical:1200
+		double_buffer:1, window_h_logical:400, window_h_px:400, window_w_px:600, window_w_logical:600
 	}
 }

@@ -6,22 +6,24 @@
 
 using namespace app;
 
-main_controller::main_controller(ldv::resource_manager& v_manager, ldt::log& log, const tools::ttf_manager& f)
-	:v_manager(v_manager), log(log),
-	font(f.get("akashi", 20)),
+main_controller::main_controller(ldv::resource_manager& v_manager, lda::resource_manager& a_manager, ldt::log& log, const tools::ttf_manager& f, dfw::audio& asys)
+	:v_manager(v_manager), a_manager(a_manager), log(log),
+	font(f.get("akashi", 20)), audio_sys(asys),
 	angle(90), alpha(255),
-	camera({32,0,600,300},{0,300}),
+	camera({32,0,200,100},{0,200}),
 	moving_box{ldv::polygon_representation::type::fill, {0,0,6,6}, ldv::rgba8(255, 0, 0, 255)},
 	moving_points({{0, 32}, {32,32}, {32,64}, {0, 64}}, ldv::rgba8(0, 255, 0, 255)),
 	moving_line{0,0, 32, 32, ldv::rgba8(0, 0, 255, 255)},
+	fps_rep(f.get("akashi", 20), ldv::rgba8(255, 255, 255, 255), ""), 
 	ogl_text(f.get("akashi", 20), 0, 0)
 {
-
+	fps_rep.go_to(32, 100);
+	audio_sys().play_music(a_manager.get_music(1));
 }
 
-void main_controller::preloop(dfw::input& input, float delta)
+void main_controller::preloop(dfw::input& input, float delta, int fps)
 {
-	
+	fps_rep.set_text(std::string("FPS:")+compat::to_string(fps));
 }
 
 void main_controller::loop(dfw::input& input, float delta)
@@ -38,9 +40,21 @@ void main_controller::loop(dfw::input& input, float delta)
 		camera.go_to({0, 0});
 		angle=0;
 	}
-	else if(input.is_input_down(input_app::num1)) camera.set_zoom(1.0);
-	else if(input.is_input_down(input_app::num2)) camera.set_zoom(2.0);
-	else if(input.is_input_down(input_app::num3)) camera.set_zoom(3.0);
+	else if(input.is_input_down(input_app::num1)) 
+	{
+		camera.set_zoom(1.0);
+		audio_sys.queue_sound({a_manager.get_sound(1)});
+	}
+	else if(input.is_input_down(input_app::num2)) 
+	{
+		camera.set_zoom(2.0);
+		audio_sys.queue_sound({a_manager.get_sound(2)});
+	}
+	else if(input.is_input_down(input_app::num3)) 
+	{
+		camera.set_zoom(3.0);
+		audio_sys.queue_sound({a_manager.get_sound(3)});
+	}
 
 	if(input.is_input_pressed(input_app::up)) camera.move_by(0, -1);
 	else if(input.is_input_pressed(input_app::down)) camera.move_by(0, 1);
@@ -65,7 +79,7 @@ void main_controller::loop(dfw::input& input, float delta)
 	ogl_text.config(camera.get_x(), camera.get_y());
 }
 
-void main_controller::postloop(dfw::input& input, float delta)
+void main_controller::postloop(dfw::input& input, float delta, int fps)
 {
 
 }
@@ -121,6 +135,7 @@ void main_controller::draw(ldv::screen& screen)
 	puntos_rotar(screen, x, 128); x+=40;
 
 	ogl_text.draw(screen);
+	fps_rep.draw(screen);
 }
 
 void main_controller::bmp(ldv::screen& screen, int x)
