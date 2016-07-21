@@ -1,7 +1,7 @@
 ################################################################################
 #Definiciones...
 
-DIR_CONTROLADORES=./class/controladores/
+DIR_CONTROLADORES=./class/controllers/
 DIR_HEADERS_APP=./class/app/
 DIR_HEADERS_IMPL=./class/app/framework_impl/
 DIR_FRAMEWORK=./class/framework/

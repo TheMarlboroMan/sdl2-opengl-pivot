@@ -30,7 +30,10 @@ class kernel
 	input&			get_input() {return input_i;}
 	audio&			get_audio() {return *audio_i;}
 	ldv::screen&	 	get_screen() {return screen_i;}
+	ldv::resource_manager&	get_video_resource_manager() {return v_manager;}
+	lda::resource_manager&	get_audio_resource_manager() {return a_manager;}
 	tools::arg_manager& 	get_arg_manager() {return arg_manager_i;}
+	
 
 	float 			get_delta_step() const {return delta_step;}
 	void 			set_delta_step(float v) {delta_step=v;}

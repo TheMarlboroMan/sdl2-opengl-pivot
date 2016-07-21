@@ -3,7 +3,7 @@
 
 //TODO; This actually sucks a lot.
 enum t_states {state_min, 
-main, 
+state_main, 
 state_max};
 
 #endif

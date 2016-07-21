@@ -3,11 +3,13 @@
 
 #include <memory>
 
+//TODO: COMPLETELY SEPARATE THE FRAMEWORK INTO A DIFFERENT PROJECT.
+
 #include "../framework/state_driver_interface.h"
 #include "../app/framework_impl/app_config.h"
 
 //Estados y controladores.
-#include "state.h"
+#include "states.h"
 #include "main.h"
 
 //Específicos de la aplicación.
@@ -18,29 +20,29 @@ namespace app
 {
 
 class state_driver:
-	public DFramework::state_driver_interface
+	public dfw::state_driver_interface
 {
 	public:
 
-							state_driver(DFramework::Kernel& kernel, App::App_config& config, DLibH::Log_base&);
+							state_driver(dfw::kernel& kernel, app::app_config& config, ldt::log&);
 	
-	virtual void					input_comun(DFramework::Input& input, float delta);
-	virtual void					paso_comun(float delta);
-	virtual void					preparar_cambio_estado(int deseado, int actual);
+	virtual void					common_input(dfw::input& input, float delta);
+	virtual void					common_step(float delta);
+	virtual void					prepare_state(int, int);
 
 	private:
 
-	void						preparar_video(DFramework::Kernel& kernel);
-	void						registrar_controladores(DFramework::Kernel& kernel);
-	void						registrar_fuentes();
-	void 						virtualizar_joysticks(DFramework::Input& input);
+	void						prepare_video(dfw::kernel& kernel);
+	void						register_controllers(dfw::kernel& kernel);
+	void						register_fonts();
+	void 						virtualize_input(dfw::input& input);
 
-	App::App_config&				config;
-	DLibH::Log_base&				log;
+	app::app_config&				config;
+	ldt::log&					log;
 
-	Herramientas_proyecto::Gestor_fuentes_TTF	fuentes;
+	tools::ttf_manager				fonts;
 	
-	std::unique_ptr<Controlador_principal>		controlador_principal;
+	std::unique_ptr<main_controller>		c_main;
 };
 
 }

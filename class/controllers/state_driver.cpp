@@ -2,91 +2,90 @@
 
 #include <algorithm>
 #include <class/dnot_parser.h>
-#include <source/string_utilidades.h>
+#include <source/string_utils.h>
 
 using namespace app;
 
-extern DLibH::Log_base LOG;
+extern ldt::log LOG;
 
-state_driver::state_driver(DFramework::Kernel& kernel, App::App_config& c, DLibH::Log_base& log)
-	:state_driver_interface(t_estados::principal, std::function<bool(int)>([](int v){return v > estado_min && v < estado_max;})),
+state_driver::state_driver(dfw::kernel& kernel, app::app_config& c, ldt::log& log)
+	:state_driver_interface(t_states::state_main, std::function<bool(int)>([](int v){return v > state_main && v < state_max;})),
 	config(c), log(log)
 {
-	preparar_video(kernel);
-	registrar_fuentes();
-	registrar_controladores(kernel);
-	virtualizar_joysticks(kernel.acc_input());
+	prepare_video(kernel);
+	register_fonts();
+	register_controllers(kernel);
+	virtualize_input(kernel.get_input());
 }
 
-void state_driver::preparar_video(DFramework::Kernel& kernel)
+void state_driver::prepare_video(dfw::kernel& kernel)
 {
-	auto& pantalla=kernel.acc_pantalla();
+	auto& screen=kernel.get_screen();
 
-	int wf=config.acc_w_fisica_pantalla(), 
-		hf=config.acc_h_fisica_pantalla(),
-		wl=config.acc_w_logica_pantalla(),
-		hl=config.acc_h_logica_pantalla();
+	int wf=config.get_w_screen_px(), 
+		hf=config.get_h_screen_px(),
+		wl=config.get_w_screen_logical(),
+		hl=config.get_h_screen_logical();
 
-	pantalla.inicializar(wf, hf);
-	pantalla.establecer_medidas_logicas(wl, hl);
-	pantalla.establecer_modo_ventana(config.acc_modo_pantalla());
+	screen.init(wf, hf);
+	screen.set_logical_size(wl, hl);
 }
 
-void state_driver::registrar_controladores(DFramework::Kernel& kernel)
+void state_driver::register_controllers(dfw::kernel& kernel)
 {
-	controlador_principal.reset(new Controlador_principal(log, fuentes));
+	c_main.reset(new main_controller(kernel.get_video_resource_manager(), log, fonts));
 
-	registrar_controlador(t_estados::principal, *controlador_principal);
+	register_controller(t_states::state_main, *c_main);
 }
 
-void state_driver::preparar_cambio_estado(int deseado, int actual)
+void state_driver::prepare_state(int next, int current)
 {
-	switch(deseado)
+	switch(next)
 	{
-		case t_estados::principal: 
+		case t_states::state_main: 
 		break;
 	}
 }
 
-void state_driver::input_comun(DFramework::Input& input, float delta)
+void state_driver::common_input(dfw::input& input, float delta)
 {
-	if(input.es_nuevo_joystick_conectado())
+	if(input().is_event_joystick_connected())
 	{
-		log<<"Detectado nuevo joystick..."<<std::endl;
-		virtualizar_joysticks(input);
+		log<<"New joystick detected..."<<std::endl;
+		virtualize_input(input);
 	}
 }
 
-void state_driver::paso_comun(float delta)
+void state_driver::common_step(float delta)
 {
 
 }
 
-void state_driver::virtualizar_joysticks(DFramework::Input& input)
+void state_driver::virtualize_input(dfw::input& input)
 {
-	for(int i=0; i < input.obtener_cantidad_joysticks(); ++i)
+	for(int i=0; i < input().get_joysticks_size(); ++i)
 	{
-		input.virtualizar_hats_joystick(i);
-		input.virtualizar_ejes_joystick(i,15000);
-		log<<"Virtualizado joystick "<<i<<std::endl;
+		input().virtualize_joystick_hats(i);
+		input().virtualize_joystick_axis(i,15000);
+		log<<"Joystick virtualized "<<i<<std::endl;
 	}
 }
 
-void state_driver::registrar_fuentes()
+void state_driver::register_fonts()
 {	
-	using namespace Herramientas_proyecto;
+	using namespace tools;
 
-	auto v=obtener_entradas_lector_txt_desde_ruta("data/recursos/fuentes.txt");
+	auto v=explode_lines_from_file("data/resources/fonts.txt");
 	for(const auto& l : v)
 	{
-		auto p=Herramientas_proyecto::explotar(l, '\t');
+		auto p=explode(l, '\t');
 		if(p.size()!=3)
 		{
-			throw std::runtime_error("Error al parsear fichero de fuentes");
+			throw std::runtime_error("unable to parse font file: 3 parameters expected");
 		}
 		else
 		{
-			fuentes.registrar_fuente(p[0], std::atoi( p[1].c_str() ), p[2] );
+			fonts.insert(p[0], std::atoi( p[1].c_str() ), p[2] );
 		}
 	}	
 }
