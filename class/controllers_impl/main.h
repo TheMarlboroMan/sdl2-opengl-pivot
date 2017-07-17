@@ -29,8 +29,8 @@ class main_controller:
 	virtual void 				loop(dfw::input& input, float delta);
 	virtual void 				postloop(dfw::input& input, float delta, int fps);
 	virtual void 				draw(ldv::screen& screen);
-	virtual void 				awake();
-	virtual void 				slumber();
+	virtual void 				awake(dfw::input& input);
+	virtual void 				slumber(dfw::input& input);
 	virtual bool				can_leave_state() const;
 
 	private:

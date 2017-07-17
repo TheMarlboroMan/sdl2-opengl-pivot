@@ -344,12 +344,12 @@ void main_controller::compuesta(ldv::screen& screen, int x)
 }
 
 
-void  main_controller::awake()
+void  main_controller::awake(dfw::input&)
 {
 
 }
 
-void  main_controller::slumber()
+void  main_controller::slumber(dfw::input&)
 {
 
 }
