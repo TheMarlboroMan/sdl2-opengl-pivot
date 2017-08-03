@@ -86,7 +86,7 @@ void main_controller::postloop(dfw::input& input, float delta, int fps)
 
 void main_controller::draw(ldv::screen& screen)
 {
-	screen.clear(ldv::rgba8(64, 64, 64, 255));
+	screen.clear(ldv::rgba8(0, 0, 0, 255));
 
 	int x=100;
 
@@ -140,21 +140,22 @@ void main_controller::draw(ldv::screen& screen)
 
 void main_controller::bmp(ldv::screen& screen, int x)
 {
-	ldv::bitmap_representation r(v_manager.get_texture(1), {x,32,32,32}, {0,0,32,32}, ldv::raster_representation::sampling::complete);
+	ldv::bitmap_representation r(v_manager.get_texture(1), {x,32,32,32}, {0,0,32,32});
+	r.set_blend(ldv::representation::blends::alpha);
 	r.draw(screen);
 	r.draw(screen, camera);
 }
 
 void main_controller::bmp_escalado(ldv::screen& screen, int x)
 {
-	ldv::bitmap_representation r(v_manager.get_texture(1), {x, 32, 64, 64}, {32,32,32,32}, ldv::raster_representation::sampling::complete);
+	ldv::bitmap_representation r(v_manager.get_texture(1), {x, 32, 64, 64}, {32,32,32,32});
 	r.draw(screen);
 	r.draw(screen, camera);
 }
 
 void main_controller::bmp_flip(ldv::screen& screen, int x, int t)
 {
-	ldv::bitmap_representation r(v_manager.get_texture(1), {x, 32, 32, 32}, {0,32,32,32}, ldv::raster_representation::sampling::complete);
+	ldv::bitmap_representation r(v_manager.get_texture(1), {x, 32, 32, 32}, {0,32,32,32});
 
 	switch(t)
 	{
@@ -171,7 +172,7 @@ void main_controller::bmp_flip(ldv::screen& screen, int x, int t)
 
 void main_controller::bmp_patron(ldv::screen& screen, int x)
 {
-	ldv::bitmap_representation r(v_manager.get_texture(1), {x, 32, 32, 32}, {0,0,32,32}, ldv::raster_representation::sampling::complete);
+	ldv::bitmap_representation r(v_manager.get_texture(1), {x, 32, 32, 32}, {0,0,32,32});
 	r.set_brush(10, 20);
 	r.draw(screen);
 	r.draw(screen, camera);
@@ -179,16 +180,17 @@ void main_controller::bmp_patron(ldv::screen& screen, int x)
 
 void main_controller::bmp_alpha(ldv::screen& screen, int x)
 {
-	ldv::bitmap_representation r(v_manager.get_texture(2), {x, 32, 50, 50}, {0,0,50,50}, ldv::raster_representation::sampling::complete);
+	ldv::bitmap_representation r(v_manager.get_texture(2), {x, 32, 50, 50}, {0,0,50,50});
 	r.set_blend(ldv::representation::blends::alpha);
-	r.set_alpha(64);
+	r.set_alpha(128);
 	r.draw(screen);
 	r.draw(screen, camera);
 }
 
 void main_controller::bmp_rotar(ldv::screen& screen, int x)
 {
-	ldv::bitmap_representation r(v_manager.get_texture(1), {x, 32, 128, 32}, {0,0,32,32}, ldv::raster_representation::sampling::complete);
+	ldv::bitmap_representation r(v_manager.get_texture(1), {x, 32, 128, 32}, {0,0,32,32});
+	r.set_blend(ldv::representation::blends::alpha);
 	if(angle)
 	{
 		r.set_rotation(angle);
@@ -311,13 +313,13 @@ void main_controller::compuesta(ldv::screen& screen, int x)
 	r.insert(r3);
 
 	ldv::bitmap_representation * r2=new ldv::bitmap_representation(v_manager.get_texture(1),
-		{64, 32, 64, 64}, {32,0,32,32}, ldv::raster_representation::sampling::complete);
+		{64, 32, 64, 64}, {32,0,32,32});
 	r2->set_brush(16, 32);
 	r.insert(r2);
 
 	ldv::bitmap_representation * r1=new ldv::bitmap_representation(v_manager.get_texture(1),
 //		{-32, 32, 32, 32}, {32,32,32,32},
-		{-32, 32, 32, 32}, {32,32,32,32}, ldv::raster_representation::sampling::complete);
+		{-32, 32, 32, 32}, {32,32,32,32});
 	r1->set_alpha(64);
 	r1->set_blend(ldv::representation::blends::alpha);
 	r.insert(r1);
