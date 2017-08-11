@@ -2,7 +2,8 @@
 
 #OPTIMIZACION=-O3
 SIMBOLOS_DEBUG=-g
-FLAGS_BASE=-Wno-deprecated -Wall -ansi -pedantic -std=c++11
+FLAGS_BASE=-Wno-deprecated -Wall -ansi -pedantic -std=c++11 
+#-Wfatal-errors -Werror
 
 CFLAGS=-c $(SIMBOLOS_DEBUG) $(OPTIMIZACION) $(FLAGS_BASE)
 CFLAGS_TARGET_FINAL=$(SIMBOLOS_DEBUG) $(OPTIMIZACION) $(FLAGS_BASE)

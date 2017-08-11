@@ -13,11 +13,11 @@ main_controller::main_controller(ldv::resource_manager& v_manager, lda::resource
 	camera({32,0,200,100},{0,200}),
 	moving_box{ldv::polygon_representation::type::fill, {0,0,6,6}, ldv::rgba8(255, 0, 0, 255)},
 	moving_points({{0, 32}, {32,32}, {32,64}, {0, 64}}, ldv::rgba8(0, 255, 0, 255)),
-	moving_line{0,0, 32, 32, ldv::rgba8(0, 0, 255, 255)},
+	moving_line{{0,0}, {32, 32}, ldv::rgba8(0, 0, 255, 255)},
 	fps_rep(f.get("akashi", 20), ldv::rgba8(255, 255, 255, 255), ""), 
 	ogl_text(f.get("akashi", 20), 0, 0)
 {
-	fps_rep.go_to(32, 100);
+	fps_rep.go_to({32, 100});
 	audio_sys().play_music(a_manager.get_music(1));
 }
 
@@ -43,17 +43,17 @@ void main_controller::loop(dfw::input& input, float delta)
 	else if(input.is_input_down(input_app::num1)) 
 	{
 		camera.set_zoom(1.0);
-		audio_sys.queue_sound({a_manager.get_sound(1)});
+		audio_sys.play_sound(a_manager.get_sound(1));
 	}
 	else if(input.is_input_down(input_app::num2)) 
 	{
 		camera.set_zoom(2.0);
-		audio_sys.queue_sound({a_manager.get_sound(2)});
+		audio_sys.play_sound(a_manager.get_sound(2));
 	}
 	else if(input.is_input_down(input_app::num3)) 
 	{
 		camera.set_zoom(3.0);
-		audio_sys.queue_sound({a_manager.get_sound(3)});
+		audio_sys.play_sound(a_manager.get_sound(3));
 	}
 
 	if(input.is_input_pressed(input_app::up)) camera.move_by(0, -1);
@@ -84,7 +84,7 @@ void main_controller::postloop(dfw::input& input, float delta, int fps)
 
 }
 
-void main_controller::draw(ldv::screen& screen)
+void main_controller::draw(ldv::screen& screen, int /*fps*/)
 {
 	screen.clear(ldv::rgba8(0, 0, 0, 255));
 
@@ -99,13 +99,13 @@ void main_controller::draw(ldv::screen& screen)
 	ccam2.draw(screen);
 
 	//Comprobaciones de go_to.
-	moving_box.go_to(camera.get_x(), camera.get_y());
+	moving_box.go_to({camera.get_x(), camera.get_y()});
 	moving_box.draw(screen);
 
-	moving_points.go_to(camera.get_x()+camera.get_focus_box().w, camera.get_focus_box().origin.y);
+	moving_points.go_to({camera.get_x()+(int)camera.get_focus_box().w, camera.get_focus_box().origin.y});
 	moving_points.draw(screen);
 
-	moving_line.go_to(camera.get_x(), camera.get_y()+camera.get_focus_box().h);
+	moving_line.go_to({camera.get_x(), camera.get_y()+(int)camera.get_focus_box().h});
 	moving_line.draw(screen);
 
 
@@ -203,7 +203,7 @@ void main_controller::bmp_rotar(ldv::screen& screen, int x)
 void main_controller::ttf(ldv::screen& screen, int x, const std::string& cad)
 {
 	ldv::ttf_representation r(font, ldv::rgba8(255, 255, 255, 255), cad);
-	r.go_to(x, 32);
+	r.go_to({x, 32});
 	r.draw(screen);
 	r.draw(screen, camera);
 }
@@ -226,7 +226,7 @@ void main_controller::caja_rellena(ldv::screen& screen, int x, int alpha)
 
 void main_controller::linea(ldv::screen& screen, int x, int alpha)
 {
-	ldv::line_representation r(x, 32, x+32, 64, ldv::rgba8(255, 0, 0, alpha));
+	ldv::line_representation r({x, 32}, {x+32, 64}, ldv::rgba8(255, 0, 0, alpha));
 	r.set_blend(ldv::representation::blends::alpha);
 	r.draw(screen);
 	r.draw(screen, camera);
@@ -234,7 +234,7 @@ void main_controller::linea(ldv::screen& screen, int x, int alpha)
 
 void main_controller::linea_rotar(ldv::screen& screen, int x, int alpha)
 {
-	ldv::line_representation r(x, 32, x+32, 64, ldv::rgba8(255, 0, 0, alpha));
+	ldv::line_representation r({x, 32}, {x+32, 64}, ldv::rgba8(255, 0, 0, alpha));
 	r.set_blend(ldv::representation::blends::alpha);
 
 	if(angle)
@@ -309,7 +309,7 @@ void main_controller::compuesta(ldv::screen& screen, int x)
 	r.insert(r4);
 
 	ldv::ttf_representation * r3=new ldv::ttf_representation(font, ldv::rgba8(255, 255, 255, 255), "Hola");
-	r3->go_to(0, 64);
+	r3->go_to({0, 64});
 	r.insert(r3);
 
 	ldv::bitmap_representation * r2=new ldv::bitmap_representation(v_manager.get_texture(1),
@@ -324,7 +324,7 @@ void main_controller::compuesta(ldv::screen& screen, int x)
 	r1->set_blend(ldv::representation::blends::alpha);
 	r.insert(r1);
 
-	ldv::line_representation * r5=new ldv::line_representation(0, 0, 64, 64, ldv::rgba8(0, 255, 0, 255));
+	ldv::line_representation * r5=new ldv::line_representation({0, 0}, {64, 64}, ldv::rgba8(0, 255, 0, 255));
 	r.insert(r5);
 
 	ldv::polygon_representation * r6=new ldv::polygon_representation{ldv::polygon_representation::type::fill, {{32, 0},{0,32},{32,32}}, ldv::rgba8(255, 0, 0, 255)};
@@ -333,7 +333,7 @@ void main_controller::compuesta(ldv::screen& screen, int x)
 	ldv::point_representation * r7=new ldv::point_representation({{64,0},{92,0},{92,16},{64,16}}, ldv::rgba8(255, 64, 64, 255));
 	r.insert(r7);
 
-	r.go_to(x, 32);
+	r.go_to({x, 32});
 	if(angle)
 	{
 		r.set_rotation(angle);
