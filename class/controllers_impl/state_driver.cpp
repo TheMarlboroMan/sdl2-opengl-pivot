@@ -55,18 +55,13 @@ void state_driver::prepare_state(int next, int current)
 	}
 }
 
-void state_driver::common_input(dfw::input& input, float delta)
+void state_driver::common_pre_loop_input(dfw::input& input, float delta)
 {
 	if(input().is_event_joystick_connected())
 	{
 		log<<"New joystick detected..."<<std::endl;
 		virtualize_input(input);
 	}
-}
-
-void state_driver::common_step(float delta)
-{
-
 }
 
 void state_driver::virtualize_input(dfw::input& input)

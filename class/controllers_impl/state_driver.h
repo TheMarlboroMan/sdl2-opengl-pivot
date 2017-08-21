@@ -26,8 +26,10 @@ class state_driver:
 
 							state_driver(dfw::kernel& kernel, app::app_config& config);
 	
-	virtual void					common_input(dfw::input& input, float delta);
-	virtual void					common_step(float delta);
+	virtual void					common_pre_loop_input(dfw::input& input, float delta);
+	virtual void					common_pre_loop_step(float ) {}
+	virtual void					common_loop_input(dfw::input& input, float delta) {}
+	virtual void					common_loop_step(float ) {}
 	virtual void					prepare_state(int, int);
 	virtual float					get_max_timestep() const {return 0.0f;}
 
