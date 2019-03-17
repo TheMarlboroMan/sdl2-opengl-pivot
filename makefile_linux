@@ -12,7 +12,9 @@ DIR_OBJ=./objects/
 SYSTEM_FLAGS=
 
 #Commands.
-CLEAN=if [ -d $(DIR_OBJ) ]; then rm -rf $(DIR_OBJ); fi;\ if [ -f $(EXECUTABLE) ]; then rm $(EXECUTABLE); fi;\
+CLEAN=if [ -d $(DIR_OBJ) ]; then rm -rf $(DIR_OBJ); fi;\
+if [ -f $(EXECUTABLE) ]; then rm $(EXECUTABLE); fi;
+
 CREATE_OBJ_DIR=mkdir -p $(DIR_OBJ);
 
 #Build specifics.
