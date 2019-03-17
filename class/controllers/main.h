@@ -23,10 +23,10 @@ class main_controller:
 {
 	public:
 
-						main_controller(ldv::resource_manager&, lda::resource_manager&, ldt::log&, const tools::ttf_manager&, dfw::audio&);
+						main_controller(ldv::resource_manager&, lda::resource_manager&, tools::log&, const tools::ttf_manager&, dfw::audio&);
 
 	virtual void 				preloop(dfw::input& input, float delta, int fps);
-	virtual void 				loop(dfw::input& input, float delta);
+	virtual void 				loop(dfw::input& input, const dfw::loop_iteration_data&);
 	virtual void 				postloop(dfw::input& input, float delta, int fps);
 	virtual void 				draw(ldv::screen& screen, int);
 	virtual void 				awake(dfw::input& input);
@@ -55,7 +55,7 @@ class main_controller:
 
 	ldv::resource_manager&			v_manager;
 	lda::resource_manager&			a_manager;
-	ldt::log&				log;
+	tools::log&				log;
 	const ldv::ttf_font&			font;
 	dfw::audio&				audio_sys;
 

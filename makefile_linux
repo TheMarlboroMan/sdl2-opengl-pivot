@@ -1,27 +1,34 @@
-#Definiciones.
-
-#OPTIMIZACION=-O3
-SIMBOLOS_DEBUG=-g
-FLAGS_BASE=-Wno-deprecated -Wall -ansi -pedantic -std=c++11 
-#-Wfatal-errors -Werror
-
-CFLAGS=-c $(SIMBOLOS_DEBUG) $(OPTIMIZACION) $(FLAGS_BASE)
-CFLAGS_TARGET_FINAL=$(SIMBOLOS_DEBUG) $(OPTIMIZACION) $(FLAGS_BASE)
-CC=g++
-EJECUTABLE=a.out
-LIMPIAR=rm objects/*; rmdir objects; rm $(EJECUTABLE);
-
-DIR_HOME=/home/dani/programacion/
-DIR_LIBDAN2=$(DIR_HOME)libdansdl2
-DIR_TOOLS=$(DIR_HOME)tools/
+#Machine specifics.
+DIR_HOME=/home/dani/devel/
+DIR_LIBDAN2=$(DIR_HOME)libdansdl2/
 DIR_DFW=$(DIR_HOME)dfw/
-DIR_O_TOOLS=$(DIR_HOME)tools/objects/
-DIR_O_DFW=$(DIR_HOME)dfw/objects/
-PREPARE_DIR_O=mkdir -p objects; touch objects/dummy
+DIR_LOG=$(DIR_HOME)log/
+DIR_TOOLS=$(DIR_HOME)tools/
+MINGW32_INCLUDE=
+MINGW32_LIB=
+DIR_SDL2=
+DIR_SDL2_LIB=
+DIR_OBJ=./objects/
+SYSTEM_FLAGS=
 
-LINKER=-L$(DIR_LIBDAN2) -lDanSDL2 -L. -lSDL2 -lSDL2_ttf -lSDL2_gfx -lSDL2_mixer -lSDL2_image -lGL
-INCLUDES=-I $(DIR_LIBDAN2) -I $(DIR_TOOLS) -I $(DIR_DFW)
-LIBRERIAS=
+#Commands.
+CLEAN=if [ -d $(DIR_OBJ) ]; then rm -rf $(DIR_OBJ); fi;\ if [ -f $(EXECUTABLE) ]; then rm $(EXECUTABLE); fi;\
+CREATE_OBJ_DIR=mkdir -p $(DIR_OBJ);
 
-include makefile_common
+#Build specifics.
+EXECUTABLE=a.out
+DEBUG=-g
+#OPTIMIZATION=-O3
+WITH_DEBUG_CODE=-DWDEBUG_CODE
+#DISABLE_ASSERT=-DNDEBUG=1
 
+#Fixed compiler definitions.
+CC=g++
+WARNING_FLAGS=-Wall -Wextra -Wundef -Wcast-align -Wwrite-strings -Wlogical-op -Wmissing-declarations -Wredundant-decls -Wshadow -Woverloaded-virtual -fno-rtti 
+FLAGS_BASE=$(WARNING_FLAGS) $(DISABLE_ASSERT) $(WITH_DEBUG_CODE) -ansi -pedantic -std=c++11
+CFLAGS=-c $(DEBUG) $(OPTIMIZATION) $(FLAGS_BASE) $(SYSTEM_FLAGS)
+CFLAGS_EXECUTABLE=$(DEBUG) $(OPTIMIZATION) $(FLAGS_BASE)
+LINKER=-L $(DIR_LIBDAN2) -lDanSDL2 -L. -lSDL2 -lSDL2_ttf -lSDL2_mixer -lSDL2_image -lGL
+INCLUDES=-I$(DIR_LIBDAN2) -I$(DIR_TOOLS) -I$(DIR_DFW) -I$(DIR_LOG)
+
+include make/core
