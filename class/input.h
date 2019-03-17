@@ -11,8 +11,16 @@ escape=0,
 up,
 down,
 left,
-right
-	};
+right,
+space,
+zoom_more,
+zoom_less,
+num1,
+num2,
+num3,
+key_a,
+key_s
+};
 
 };
 

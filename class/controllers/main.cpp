@@ -2,7 +2,7 @@
 
 #include <templates/compatibility_patches.h>
 
-#include "input.h"
+#include "../input.h"
 
 using namespace app;
 
@@ -33,6 +33,8 @@ void main_controller::loop(dfw::input& input, const dfw::loop_iteration_data&)
 		set_leave(true);
 		return;
 	}
+
+	//TODO: 
 
 	if(input.is_input_down(input_app::space)) 
 	{
@@ -135,6 +137,7 @@ void main_controller::draw(ldv::screen& screen, int)
 	puntos_rotar(screen, x, 128); x+=40;
 
 	ogl_text.draw(screen);
+	//TODO: This is not working.
 	fps_rep.draw(screen);
 }
 
