@@ -10,7 +10,7 @@ main_controller::main_controller(ldv::resource_manager& _v_manager, lda::resourc
 	:v_manager(_v_manager), a_manager(_a_manager), log(_log),
 	font(f.get("akashi", 20)), audio_sys(asys),
 	angle(90), alpha(255), changing_ttf_delta{0.f},
-	changing_ttf_str{"This is just a test string..."},
+	changing_ttf_str{"This is just a test string...\nWith a couple of lines..."},
 	camera({32,0,200,100},{0,200}),
 	moving_box{ldv::polygon_representation::type::fill, {0,0,6,6}, ldv::rgba8(255, 0, 0, 255)},
 	moving_points({{0, 32}, {32,32}, {32,64}, {0, 64}}, ldv::rgba8(0, 255, 0, 255)),
@@ -252,16 +252,19 @@ void main_controller::ttf_align(ldv::screen& _screen, int _length) {
 	using alv=ldv::representation_alignment::v;
 
 	ldv::ttf_representation inner_right(font, ldv::rgba8(255, 0, 0, 255), curstr);
+	inner_right.set_text_align(ldv::ttf_representation::text_align::right);
 	inner_right.align(center_box, {alh::inner_right, alv::inner_top, 0, 0});
 	inner_right.draw(_screen);
 	inner_right.draw(_screen, camera);
 
 	ldv::ttf_representation inner_left(font, ldv::rgba8(0, 255, 0, 255), curstr);
+	inner_left.set_text_align(ldv::ttf_representation::text_align::left);
 	inner_left.align(center_box, {alh::inner_left, alv::inner_bottom, 0, 0});
 	inner_left.draw(_screen);
 	inner_left.draw(_screen, camera);
 
 	ldv::ttf_representation center(font, ldv::rgba8(0, 0, 255, 255), curstr);
+	center.set_text_align(ldv::ttf_representation::text_align::center);
 	center.align(center_box, {alh::center, alv::center, 0, 0});
 	center.draw(_screen);
 	center.draw(_screen, camera);

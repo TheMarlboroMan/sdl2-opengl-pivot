@@ -1,5 +1,5 @@
 #Machine specifics.
-DIR_HOME=~/devel/other/
+DIR_HOME=~/devel/
 DIR_LIBDAN2=$(DIR_HOME)libdansdl2/
 DIR_DFW=$(DIR_HOME)dfw/
 DIR_LOG=$(DIR_HOME)log/
