@@ -10,7 +10,7 @@ main_controller::main_controller(ldv::resource_manager& _v_manager, lda::resourc
 	:v_manager(_v_manager), a_manager(_a_manager), log(_log),
 	font(f.get("akashi", 20)), audio_sys(asys),
 	angle(90), alpha(255), changing_ttf_delta{0.f},
-	changing_ttf_str{"This is a test string"},
+	changing_ttf_str{"This is just a test string..."},
 	camera({32,0,200,100},{0,200}),
 	moving_box{ldv::polygon_representation::type::fill, {0,0,6,6}, ldv::rgba8(255, 0, 0, 255)},
 	moving_points({{0, 32}, {32,32}, {32,64}, {0, 64}}, ldv::rgba8(0, 255, 0, 255)),
@@ -143,7 +143,8 @@ void main_controller::draw(ldv::screen& screen, int)
 	poligono_relleno(screen, x, 128); x+=40;
 	puntos(screen, x, 255); x+=40;
 	puntos_rotar(screen, x, 128); x+=40;
-	changing_ttf(screen, 32, changing_ttf_iterator);
+	changing_ttf(screen, changing_ttf_iterator);
+	ttf_align(screen, changing_ttf_iterator);
 
 	ogl_text.draw(screen);
 	//TODO: This is not working.
@@ -212,10 +213,10 @@ void main_controller::bmp_rotar(ldv::screen& screen, int x)
 	r.draw(screen, camera);
 }
 
-void main_controller::changing_ttf(ldv::screen& _screen, int _x, int _length) {
+void main_controller::changing_ttf(ldv::screen& _screen, int _length) {
 
 	ldv::ttf_representation r(font, ldv::rgba8(255, 255, 255, 255), changing_ttf_str.substr(0, _length));
-	r.go_to({_x, 64});
+	r.go_to({32, 64});
 	r.draw(_screen);
 	r.draw(_screen, camera);
 }
@@ -226,6 +227,44 @@ void main_controller::ttf(ldv::screen& screen, int x, const std::string& cad)
 	r.go_to({x, 32});
 	r.draw(screen);
 	r.draw(screen, camera);
+}
+
+void main_controller::ttf_align(ldv::screen& _screen, int _length) {
+
+	//Vertical line...
+	ldv::line_representation line({200, 32}, {200, 300}, ldv::rgba8(255, 0, 0, 255));
+	line.set_blend(ldv::representation::blends::alpha);
+	line.draw(_screen);
+	line.draw(_screen, camera);
+
+	ldv::rect center_box={32, 160, 400, 200};
+
+	//box..
+	ldv::box_representation box{ldv::polygon_representation::type::fill, center_box, ldv::rgba8(64, 64, 64, 32)};
+	box.set_blend(ldv::representation::blends::alpha);
+	box.draw(_screen);
+	box.draw(_screen, camera);
+
+	//Now the strings...
+	const std::string curstr{changing_ttf_str.substr(0, _length)};
+
+	using alh=ldv::representation_alignment::h;
+	using alv=ldv::representation_alignment::v;
+
+	ldv::ttf_representation inner_right(font, ldv::rgba8(255, 0, 0, 255), curstr);
+	inner_right.align(center_box, {alh::inner_right, alv::inner_top, 0, 0});
+	inner_right.draw(_screen);
+	inner_right.draw(_screen, camera);
+
+	ldv::ttf_representation inner_left(font, ldv::rgba8(0, 255, 0, 255), curstr);
+	inner_left.align(center_box, {alh::inner_left, alv::inner_bottom, 0, 0});
+	inner_left.draw(_screen);
+	inner_left.draw(_screen, camera);
+
+	ldv::ttf_representation center(font, ldv::rgba8(0, 0, 255, 255), curstr);
+	center.align(center_box, {alh::center, alv::center, 0, 0});
+	center.draw(_screen);
+	center.draw(_screen, camera);
 }
 
 void main_controller::caja(ldv::screen& screen, int x, int _alpha)
