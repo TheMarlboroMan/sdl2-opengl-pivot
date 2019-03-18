@@ -6,11 +6,8 @@
 //tools
 #include <class/dnot_parser.h>
 #include <source/string_utils.h>
-
-#ifdef WDEBUG_CODE
 #include "../input.h"
 #include "../controllers/states.h"
-#endif
 
 using namespace app;
 
@@ -127,12 +124,12 @@ void state_driver::register_controllers(dfw::kernel& kernel) {
 	};
 
 	//register controllers here.
-	reg(c_main, t_states::state_main, 
+	reg(c_main, t_states::state_main,
 		new main_controller(
-			kernel.get_video_resource_manager(), 
-			kernel.get_audio_resource_manager(), 
-			log, 
-			fonts, 
+			kernel.get_video_resource_manager(),
+			kernel.get_audio_resource_manager(),
+			log,
+			fonts,
 			kernel.get_audio()
 		)
 	);

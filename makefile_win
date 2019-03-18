@@ -10,14 +10,14 @@ MINGW32_LIB=C:\Mingw-w64-builds/lib
 
 DIR_SDL2=$(DIR_HOME)../deps/sdl2-plus-libs/include/
 DIR_SDL2_LIB=$(DIR_HOME)../deps/sdl2-plus-libs/lib/
-DIR_OBJ=objects
 SYSTEM_FLAGS=-DWINCOMPIL=1
 
 #Commands.
-CLEAN=if exist $(DIR_OBJ) rmdir $(DIR_OBJ) /S /Q; if exist $(EXECUTABLE) del $(EXECUTABLE);
-CREATE_OBJ_DIR=	if not exist "$(DIR_OBJ)" mkdir $(DIR_OBJ)
+CLEAN=if exist $(DIR_OBJ) rmdir $(DIR_OBJ) /S /Q; if exist $(EXECUTABLE) del $(EXECUTABLE)
+CREATE_OBJ_DIR=if not exist "$(DIR_OBJ)" mkdir $(DIR_OBJ);
 
 #Build specifics.
+DIR_OBJ=objects
 EXECUTABLE=a.exe
 DEBUG=-g
 #OPTIMIZATION=-O3

@@ -1,7 +1,11 @@
 DIR_CONTROLLERS=./class/controllers/
-DEP_CONTROLLERS=$(DIR_OBJ)main_controller.o
+
+DEP_CONTROLLERS=\
+$(DIR_O)main_controller.o
+#ENDCONTROLLERLIST
 
 #Controller recipes.
-$(DIR_OBJ)main_controller.o: $(DIR_CONTROLLERS)main.h $(DIR_CONTROLLERS)main.cpp
-	$(CC) $(CFLAGS) $(INCLUDES) $(DIR_CONTROLLERS)main.cpp -o $(DIR_OBJ)main_controller.o
-
+$(DIR_O)main_controller.o:\
+$(DIR_CONTROLLERS)main.h\
+$(DIR_CONTROLLERS)main.cpp
+	$(CC) $(CFLAGS) $(INCLUDES) $(DIR_CONTROLLERS)main.cpp -o $(DIR_O)main_controller.o
