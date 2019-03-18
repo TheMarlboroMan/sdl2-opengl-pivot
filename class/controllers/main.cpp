@@ -9,12 +9,13 @@ using namespace app;
 main_controller::main_controller(ldv::resource_manager& _v_manager, lda::resource_manager& _a_manager, tools::log& _log, const tools::ttf_manager& f, dfw::audio& asys)
 	:v_manager(_v_manager), a_manager(_a_manager), log(_log),
 	font(f.get("akashi", 20)), audio_sys(asys),
-	angle(90), alpha(255),
+	angle(90), alpha(255), changing_ttf_delta{0.f},
+	changing_ttf_str{"This is a test string"},
 	camera({32,0,200,100},{0,200}),
 	moving_box{ldv::polygon_representation::type::fill, {0,0,6,6}, ldv::rgba8(255, 0, 0, 255)},
 	moving_points({{0, 32}, {32,32}, {32,64}, {0, 64}}, ldv::rgba8(0, 255, 0, 255)),
 	moving_line{{0,0}, {32, 32}, ldv::rgba8(0, 0, 255, 255)},
-	fps_rep(f.get("akashi", 20), ldv::rgba8(255, 255, 255, 255), ""), 
+	fps_rep(f.get("akashi", 20), ldv::rgba8(255, 255, 255, 255), ""),
 	ogl_text(f.get("akashi", 20), 0, 0)
 {
 	fps_rep.go_to({32, 100});
@@ -26,7 +27,7 @@ void main_controller::preloop(dfw::input&, float, int fps)
 	fps_rep.set_text(std::string("FPS:")+compat::to_string(fps));
 }
 
-void main_controller::loop(dfw::input& input, const dfw::loop_iteration_data&)
+void main_controller::loop(dfw::input& input, const dfw::loop_iteration_data& _lid)
 {
 	if(input().is_exit_signal() || input.is_input_down(input_app::escape))
 	{
@@ -34,25 +35,32 @@ void main_controller::loop(dfw::input& input, const dfw::loop_iteration_data&)
 		return;
 	}
 
-	//TODO: 
+	changing_ttf_delta+=_lid.delta;
+	if(changing_ttf_delta > 0.30f) {
+		changing_ttf_delta=0.f;
+		++changing_ttf_iterator;
+		if((size_t)changing_ttf_iterator >= changing_ttf_str.size()) {
+			changing_ttf_iterator=0;
+		}
+	}
 
-	if(input.is_input_down(input_app::space)) 
+	if(input.is_input_down(input_app::space))
 	{
 		camera.set_zoom(1.0);
 		camera.go_to({0, 0});
 		angle=0;
 	}
-	else if(input.is_input_down(input_app::num1)) 
+	else if(input.is_input_down(input_app::num1))
 	{
 		camera.set_zoom(1.0);
 		audio_sys.play_sound(a_manager.get_sound(1));
 	}
-	else if(input.is_input_down(input_app::num2)) 
+	else if(input.is_input_down(input_app::num2))
 	{
 		camera.set_zoom(2.0);
 		audio_sys.play_sound(a_manager.get_sound(2));
 	}
-	else if(input.is_input_down(input_app::num3)) 
+	else if(input.is_input_down(input_app::num3))
 	{
 		camera.set_zoom(3.0);
 		audio_sys.play_sound(a_manager.get_sound(3));
@@ -64,12 +72,12 @@ void main_controller::loop(dfw::input& input, const dfw::loop_iteration_data&)
 	if(input.is_input_pressed(input_app::left)) camera.move_by(-1, 0);
 	else if(input.is_input_pressed(input_app::right)) camera.move_by(1, 0);
 
-	if(input.is_input_pressed(input_app::key_a)) 
+	if(input.is_input_pressed(input_app::key_a))
 	{
 		--angle;
 		--alpha; if(alpha < 0) alpha=0;
 	}
-	else if(input.is_input_pressed(input_app::key_s)) 
+	else if(input.is_input_pressed(input_app::key_s))
 	{
 		++angle;
 		++alpha; if(alpha > 255) alpha=255;
@@ -135,6 +143,7 @@ void main_controller::draw(ldv::screen& screen, int)
 	poligono_relleno(screen, x, 128); x+=40;
 	puntos(screen, x, 255); x+=40;
 	puntos_rotar(screen, x, 128); x+=40;
+	changing_ttf(screen, 32, changing_ttf_iterator);
 
 	ogl_text.draw(screen);
 	//TODO: This is not working.
@@ -165,7 +174,7 @@ void main_controller::bmp_flip(ldv::screen& screen, int x, int t)
 		case 0: break;
 		case 1: r.set_invert_horizontal(true); break;
 		case 2: r.set_invert_vertical(true); break;
-		case 3: r.set_invert_horizontal(true); 
+		case 3: r.set_invert_horizontal(true);
 			r.set_invert_vertical(true); break;
 	}
 
@@ -201,6 +210,14 @@ void main_controller::bmp_rotar(ldv::screen& screen, int x)
 	}
 	r.draw(screen);
 	r.draw(screen, camera);
+}
+
+void main_controller::changing_ttf(ldv::screen& _screen, int _x, int _length) {
+
+	ldv::ttf_representation r(font, ldv::rgba8(255, 255, 255, 255), changing_ttf_str.substr(0, _length));
+	r.go_to({_x, 64});
+	r.draw(_screen);
+	r.draw(_screen, camera);
 }
 
 void main_controller::ttf(ldv::screen& screen, int x, const std::string& cad)
@@ -292,7 +309,7 @@ void main_controller::puntos_rotar(ldv::screen& screen, int x, int _alpha)
 {
 	ldv::point_representation r({{x,32},{x+32,32},{x+32, 64},{x, 64}}, ldv::rgba8(255, 0, 0, _alpha));
 	r.set_blend(ldv::representation::blends::alpha);
-	
+
 	if(angle)
 	{
 		r.set_rotation(angle);

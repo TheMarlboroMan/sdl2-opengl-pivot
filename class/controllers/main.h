@@ -34,7 +34,7 @@ class main_controller:
 	virtual bool				can_leave_state() const;
 
 	private:
-	
+
 	void					bmp(ldv::screen& screen, int x);
 	void					bmp_escalado(ldv::screen& screen, int x);
 	void					bmp_alpha(ldv::screen& screen, int x);
@@ -42,6 +42,7 @@ class main_controller:
 	void					bmp_rotar(ldv::screen& screen, int x);
 	void					bmp_patron(ldv::screen& screen, int x);
 	void					ttf(ldv::screen& screen, int x, const std::string&);
+	void					changing_ttf(ldv::screen& screen, int x, int l);
 	void					caja(ldv::screen& screen, int x, int alpha);
 	void					caja_rellena(ldv::screen& screen, int x, int alpha);
 	void					linea(ldv::screen& screen, int x, int alpha);
@@ -60,7 +61,10 @@ class main_controller:
 	dfw::audio&				audio_sys;
 
 	int					angle,
-						alpha;
+						alpha,
+						changing_ttf_iterator=0;
+	float				changing_ttf_delta;
+	const std::string 	changing_ttf_str;
 
 	ldv::camera				camera;
 	ldv::box_representation			moving_box;
@@ -91,7 +95,7 @@ class main_controller:
 		}
 
 		private:
-	
+
 
 		ldv::ttf_representation 	text;
 	}ogl_text;
