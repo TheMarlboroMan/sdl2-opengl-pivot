@@ -29,12 +29,10 @@ CFLAGS_EXECUTABLE=$(DEBUG) $(OPTIMIZATION) $(FLAGS_BASE)
 LINKER=-L $(DIR_LIBDAN2) -L $(DIR_DFW) -L $(DIR_TOOLS) -ldfw -ltools -lDanSDL2 -lSDL2 -lSDL2_ttf -lSDL2_mixer -lSDL2_image -lGL
 INCLUDES=-I $(DIR_LIBDAN2) -I $(DIR_TOOLS) -I $(DIR_DFW) -I $(DIR_LOG)
 
-
 #Commands.
 CLEAN=if [ -d $(DIR_OBJ) ]; then rm -rf $(DIR_OBJ); fi;\
 if [ -f $(EXECUTABLE) ]; then rm $(EXECUTABLE); fi;
 
 CREATE_OBJ_DIR=mkdir -p $(DIR_OBJ);
-
 
 include make/core
