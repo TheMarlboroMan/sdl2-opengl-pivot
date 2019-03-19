@@ -1,16 +1,16 @@
-#Machine specifics.
+#Local specifics.
 DIR_HOME=~/devel/
-DIR_LIBDAN2=$(DIR_HOME)libdansdl2/
-DIR_DFW=$(DIR_HOME)dfw/
-DIR_LOG=$(DIR_HOME)log/
-DIR_TOOLS=$(DIR_HOME)tools/
 MINGW32_INCLUDE=
 MINGW32_LIB=
 DIR_SDL2=
 DIR_SDL2_LIB=
-DIR_O_TOOLS=$(DIR_HOME)tools/objects/
-DIR_O_DFW=$(DIR_HOME)dfw/objects/
 SYSTEM_FLAGS=
+
+#Dependency specifics.
+DIR_LIBDAN2=$(DIR_HOME)libdansdl2/
+DIR_DFW=$(DIR_HOME)dfw/
+DIR_LOG=$(DIR_HOME)log/
+DIR_TOOLS=$(DIR_HOME)tools/
 
 #Build specifics.
 DIR_OBJ=objects

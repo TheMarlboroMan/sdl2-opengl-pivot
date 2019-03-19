@@ -6,7 +6,6 @@ DIR_O=./$(DIR_OBJ)/
 include make/app
 include make/controllers
 include make/dfw
-include make/app_dependencies
 
 ################################################################################
 #Target definitions.
