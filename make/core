@@ -19,6 +19,7 @@ $(EXECUTABLE): \
 $(DIR_LIBDAN2)/libDanSDL2.a\
 $(DIR_DFW)/libdfw.a\
 $(DIR_TOOLS)/libtools.a\
+$(DIR_LOG)/liblog.a\
 $(DEP_APP) \
 $(DEP_DFW_IMPLEMENTATION) \
 $(DEP_CONTROLLERS) \

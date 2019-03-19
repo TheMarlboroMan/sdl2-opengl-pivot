@@ -26,7 +26,7 @@ WARNING_FLAGS=-Wno-deprecated -Wall
 FLAGS_BASE=$(WARNING_FLAGS) $(DISABLE_ASSERT) $(WITH_DEBUG_CODE) -ansi -pedantic -std=c++11 -fno-rtti
 CFLAGS=-c $(DEBUG) $(OPTIMIZATION) $(FLAGS_BASE) $(SYSTEM_FLAGS)
 CFLAGS_EXECUTABLE=$(DEBUG) $(OPTIMIZATION) $(FLAGS_BASE)
-LINKER=-L$(MINGW32_LIB) -L$(DIR_SDL2_LIB) -L$(DIR_LIBDAN2) -L$(DIR_DFW) -L$(DIR_TOOLS) -lstdc++ -ldfw -ltools -lDanSDL2 -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lopengl32 -lSDL2_ttf -lSDL2_image
+LINKER=-L$(MINGW32_LIB) -L$(DIR_SDL2_LIB) -L$(DIR_LIBDAN2) -L$(DIR_DFW) -L$(DIR_TOOLS) -L $(DIR_LOG) -lstdc++ -ldfw -ltools -lDanSDL2 -ltools -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lopengl32 -lSDL2_ttf -lSDL2_image
 
 #Commands.
 CLEAN=if exist $(DIR_OBJ) rmdir $(DIR_OBJ) /S /Q; if exist $(EXECUTABLE) del $(EXECUTABLE)
