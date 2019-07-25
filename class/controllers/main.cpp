@@ -12,7 +12,7 @@ main_controller::main_controller(ldv::resource_manager& _v_manager, lda::resourc
 	angle(90), alpha(255), changing_ttf_delta{0.f},
 	changing_ttf_str{"This is just a test string...\nWith a couple of lines..."},
 	camera({32,0,200,100},{0,200}),
-	moving_box{ldv::polygon_representation::type::fill, {0,0,6,6}, ldv::rgba8(255, 0, 0, 255)},
+	moving_box{{0,0,6,6}, ldv::rgba8(255, 0, 0, 255), ldv::polygon_representation::type::fill},
 	moving_points({{0, 32}, {32,32}, {32,64}, {0, 64}}, ldv::rgba8(0, 255, 0, 255)),
 	moving_line{{0,0}, {32, 32}, ldv::rgba8(0, 0, 255, 255)},
 	fps_rep(f.get("akashi", 20), ldv::rgba8(255, 255, 255, 255), ""),
@@ -101,11 +101,11 @@ void main_controller::draw(ldv::screen& screen, int)
 	int x=100;
 
 	//Posición real de la cámara
-	ldv::box_representation ccam{ldv::polygon_representation::type::line,{(int)camera.get_pos_box().origin.x, (int)camera.get_pos_box().origin.y, (unsigned int)camera.get_pos_box().w, (unsigned int)camera.get_pos_box().h}, ldv::rgba8(255, 255, 255, 12)};
+	ldv::box_representation ccam{{(int)camera.get_pos_box().origin.x, (int)camera.get_pos_box().origin.y, (unsigned int)camera.get_pos_box().w, (unsigned int)camera.get_pos_box().h}, ldv::rgba8(255, 255, 255, 12), ldv::polygon_representation::type::line};
 	ccam.draw(screen);
 
 	//Cuadro móvil a dónde enfoca...
-	ldv::box_representation ccam2{ldv::polygon_representation::type::line,{(int)camera.get_x(), (int)camera.get_y(), (unsigned int)camera.get_focus_box().w, (unsigned int)camera.get_focus_box().h}, ldv::rgba8(255, 255, 255, 64)};
+	ldv::box_representation ccam2{{(int)camera.get_x(), (int)camera.get_y(), (unsigned int)camera.get_focus_box().w, (unsigned int)camera.get_focus_box().h}, ldv::rgba8(255, 255, 255, 64), ldv::polygon_representation::type::line};
 	ccam2.draw(screen);
 
 	//Comprobaciones de go_to.
@@ -240,7 +240,7 @@ void main_controller::ttf_align(ldv::screen& _screen, int _length) {
 	ldv::rect center_box={32, 160, 400, 200};
 
 	//box..
-	ldv::box_representation box{ldv::polygon_representation::type::fill, center_box, ldv::rgba8(64, 64, 64, 32)};
+	ldv::box_representation box{center_box, ldv::rgba8(64, 64, 64, 32), ldv::polygon_representation::type::fill};
 	box.set_blend(ldv::representation::blends::alpha);
 	box.draw(_screen);
 	box.draw(_screen, camera);
@@ -272,7 +272,7 @@ void main_controller::ttf_align(ldv::screen& _screen, int _length) {
 
 void main_controller::caja(ldv::screen& screen, int x, int _alpha)
 {
-	ldv::box_representation r{ldv::polygon_representation::type::line, {x, 32, 32, 32}, ldv::rgba8(255, 0, 0, _alpha)};
+	ldv::box_representation r{{x, 32, 32, 32}, ldv::rgba8(255, 0, 0, _alpha), ldv::polygon_representation::type::line};
 	r.set_blend(ldv::representation::blends::alpha);
 	r.draw(screen);
 	r.draw(screen, camera);
@@ -280,7 +280,7 @@ void main_controller::caja(ldv::screen& screen, int x, int _alpha)
 
 void main_controller::caja_rellena(ldv::screen& screen, int x, int _alpha)
 {
-	ldv::box_representation r{ldv::polygon_representation::type::fill, {x, 32, 32, 32}, ldv::rgba8(255, 0, 0, _alpha)};
+	ldv::box_representation r{{x, 32, 32, 32}, ldv::rgba8(255, 0, 0, _alpha), ldv::polygon_representation::type::fill};
 	r.set_blend(ldv::representation::blends::alpha);
 	r.draw(screen);
 	r.draw(screen, camera);
@@ -310,7 +310,7 @@ void main_controller::linea_rotar(ldv::screen& screen, int x, int _alpha)
 
 void main_controller::poligono(ldv::screen& screen, int x, int _alpha)
 {
-	ldv::polygon_representation r{ldv::polygon_representation::type::line, {{x, 32},{x+16,40},{x+32,32},{x+16,64}}, ldv::rgba8(255, 0, 0, _alpha)};
+	ldv::polygon_representation r{{{x, 32},{x+16,40},{x+32,32},{x+16,64}}, ldv::rgba8(255, 0, 0, _alpha), ldv::polygon_representation::type::line};
 	r.set_blend(ldv::representation::blends::alpha);
 	r.draw(screen);
 	r.draw(screen, camera);
@@ -318,7 +318,7 @@ void main_controller::poligono(ldv::screen& screen, int x, int _alpha)
 
 void main_controller::poligono_rotado(ldv::screen& screen, int x, int _alpha)
 {
-	ldv::polygon_representation r{ldv::polygon_representation::type::line, {{x, 32},{x+16,40},{x+32,32},{x+16,64}}, ldv::rgba8(255, 0, 0, _alpha)};
+	ldv::polygon_representation r{{{x, 32},{x+16,40},{x+32,32},{x+16,64}}, ldv::rgba8(255, 0, 0, _alpha), ldv::polygon_representation::type::line};
 	r.set_blend(ldv::representation::blends::alpha);
 
 	if(angle)
@@ -333,7 +333,7 @@ void main_controller::poligono_rotado(ldv::screen& screen, int x, int _alpha)
 
 void main_controller::poligono_relleno(ldv::screen& screen, int x, int _alpha)
 {
-	ldv::polygon_representation r{ldv::polygon_representation::type::fill, {{x, 40},{x+16,32},{x+32,40},{x+16,64}}, ldv::rgba8(255, 0, 0, _alpha)};
+	ldv::polygon_representation r{{{x, 40},{x+16,32},{x+32,40},{x+16,64}}, ldv::rgba8(255, 0, 0, _alpha), ldv::polygon_representation::type::fill};
 	r.set_blend(ldv::representation::blends::alpha);
 	r.draw(screen);
 	r.draw(screen, camera);
@@ -366,7 +366,7 @@ void main_controller::compuesta(ldv::screen& screen, int x)
 {
 	ldv::group_representation r({x, 32});
 
-	ldv::box_representation * r4=new ldv::box_representation{ldv::polygon_representation::type::fill, {32, 32, 32, 32}, ldv::rgba8(0, 0, 255, 255)};
+	ldv::box_representation * r4=new ldv::box_representation{{32, 32, 32, 32}, ldv::rgba8(0, 0, 255, 255), ldv::polygon_representation::type::fill};
 	r.insert(r4);
 
 	ldv::ttf_representation * r3=new ldv::ttf_representation(font, ldv::rgba8(255, 255, 255, 255), "Hola");
@@ -388,7 +388,7 @@ void main_controller::compuesta(ldv::screen& screen, int x)
 	ldv::line_representation * r5=new ldv::line_representation({0, 0}, {64, 64}, ldv::rgba8(0, 255, 0, 255));
 	r.insert(r5);
 
-	ldv::polygon_representation * r6=new ldv::polygon_representation{ldv::polygon_representation::type::fill, {{32, 0},{0,32},{32,32}}, ldv::rgba8(255, 0, 0, 255)};
+	ldv::polygon_representation * r6=new ldv::polygon_representation{{{32, 0},{0,32},{32,32}}, ldv::rgba8(255, 0, 0, 255), ldv::polygon_representation::type::fill};
 	r.insert(r6);
 
 	ldv::point_representation * r7=new ldv::point_representation({{64,0},{92,0},{92,16},{64,16}}, ldv::rgba8(255, 64, 64, 255));
