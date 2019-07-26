@@ -195,7 +195,7 @@ void main_controller::bmp_alpha(ldv::screen& screen, int x)
 {
 	ldv::bitmap_representation r(v_manager.get_texture(2), {x, 32, 50, 50}, {0,0,50,50});
 	r.set_blend(ldv::representation::blends::alpha);
-	r.set_alpha(128);
+	r.set_alpha(255);
 	r.draw(screen);
 	r.draw(screen, camera);
 }
