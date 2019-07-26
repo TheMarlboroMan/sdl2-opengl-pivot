@@ -3,3 +3,5 @@ logs/*
 *.out
 !old_a.out
 makefile
+*.dll
+*.exe
