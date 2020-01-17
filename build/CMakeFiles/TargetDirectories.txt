@@ -1,0 +1,11 @@
+/home/dani/devel/sdl2-opengl-pivot/build/CMakeFiles/edit_cache.dir
+/home/dani/devel/sdl2-opengl-pivot/build/CMakeFiles/rebuild_cache.dir
+/home/dani/devel/sdl2-opengl-pivot/build/CMakeFiles/a.dir
+/home/dani/devel/sdl2-opengl-pivot/build/src/CMakeFiles/edit_cache.dir
+/home/dani/devel/sdl2-opengl-pivot/build/src/CMakeFiles/rebuild_cache.dir
+/home/dani/devel/sdl2-opengl-pivot/build/src/class/CMakeFiles/edit_cache.dir
+/home/dani/devel/sdl2-opengl-pivot/build/src/class/CMakeFiles/rebuild_cache.dir
+/home/dani/devel/sdl2-opengl-pivot/build/src/class/dfwimpl/CMakeFiles/edit_cache.dir
+/home/dani/devel/sdl2-opengl-pivot/build/src/class/dfwimpl/CMakeFiles/rebuild_cache.dir
+/home/dani/devel/sdl2-opengl-pivot/build/src/class/controllers/CMakeFiles/edit_cache.dir
+/home/dani/devel/sdl2-opengl-pivot/build/src/class/controllers/CMakeFiles/rebuild_cache.dir
