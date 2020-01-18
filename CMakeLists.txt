@@ -29,16 +29,19 @@ set_target_properties(tools PROPERTIES IMPORTED_LOCATION ${TOOLS_LIB_LOCATION})
 
 set(DANSDL2_LIB_LOCATION "${PROJECT_SOURCE_DIR}/../libdansdl2/build/libdansdl2.a" CACHE STRING "dansdl2 static lib location")
 add_library(dansdl2 STATIC IMPORTED)
+add_dependencies(dansdl2 lm)
 set_target_properties(dansdl2 PROPERTIES IMPORTED_LOCATION ${DANSDL2_LIB_LOCATION})
 
 set(DANSDL2_TOOLS_LIB_LOCATION "${PROJECT_SOURCE_DIR}/../libdansdl2-tools/build/libdansdl2-tools.a" CACHE STRING "dansdl2-tools static lib location")
 add_library(dansdl2-tools STATIC IMPORTED)
+add_dependencies(dansdl2-tools lm tools dansdl2)
 set_target_properties(dansdl2-tools PROPERTIES IMPORTED_LOCATION ${DANSDL2_TOOLS_LIB_LOCATION})
 
 set(DFW_LIB_LOCATION "${PROJECT_SOURCE_DIR}/../dfw/build/libdfw.a" CACHE STRING "dfw static lib location")
 add_library(dfw STATIC IMPORTED)
+add_dependencies(dfw lm tools dansdl2 dansdl2-tools)
 set_target_properties(dfw PROPERTIES IMPORTED_LOCATION ${DFW_LIB_LOCATION})
 
 #executable
 add_executable(a src/main.cpp ${SOURCE})
-target_link_libraries(a lm tools dansdl2 dansdl2-tools SDL2 SDL2_ttf SDL2_mixer SDL2_image GL)
+target_link_libraries(a dfw lm tools dansdl2 dansdl2-tools SDL2 SDL2_ttf SDL2_mixer SDL2_image GL)
