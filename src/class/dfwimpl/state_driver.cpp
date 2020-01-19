@@ -13,8 +13,6 @@
 
 using namespace app;
 
-extern lm::logger LOG;
-
 state_driver::state_driver(dfw::kernel& kernel, app::app_config& c)
 	:state_driver_interface(t_states::state_main),
 	config(c), log(kernel.get_log()) {

@@ -16,8 +16,9 @@ set(DFW_INC_DIR "${PROJECT_SOURCE_DIR}/../dfw/include/" CACHE STRING "dfw includ
 include_directories(${LOG_INC_DIR} ${DANSDL2_INC_DIR} ${DANSDL2_TOOLS_INC_DIR} ${TOOLS_INC_DIR} ${DFW_INC_DIR})
 
 #source
+set(SOURCE "")
 add_subdirectory("${PROJECT_SOURCE_DIR}/src")
-
+message("SOURCE IS ${SOURCE}")
 #libraries... added manually. Sorry, that's life.
 set(LOG_LIB_LOCATION "${PROJECT_SOURCE_DIR}/../log/build/liblm.a" CACHE STRING "log static lib location")
 add_library(lm STATIC IMPORTED)
@@ -44,4 +45,4 @@ set_target_properties(dfw PROPERTIES IMPORTED_LOCATION ${DFW_LIB_LOCATION})
 
 #executable
 add_executable(a src/main.cpp ${SOURCE})
-target_link_libraries(a dfw lm tools dansdl2 dansdl2-tools SDL2 SDL2_ttf SDL2_mixer SDL2_image GL)
+target_link_libraries(a dfw dansdl2-tools dansdl2 tools lm SDL2 SDL2_ttf SDL2_mixer SDL2_image GL)

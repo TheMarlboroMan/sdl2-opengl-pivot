@@ -7,9 +7,6 @@
 #include <lm/logger.h>
 #include <lm/sentry.h>
 
-//Global log. Bad practice, but useful.
-lm::file_logger LOG("logs/global.log");
-
 int main(int argc, char ** argv)
 {
 	using namespace app;
@@ -18,6 +15,7 @@ int main(int argc, char ** argv)
 	ldt::log_lsdl::set_type(ldt::log_lsdl::types::file);
 	ldt::log_lsdl::set_filename("logs/libdansdl2.log");
 	ldt::log_lsdl::get();
+	lm::log(ldt::log_lsdl::get(), lm::lvl::info)<<"sdl2 log is ready"<<std::endl;
 
 	//Argument controller.
 	tools::arg_manager carg(argc, argv);
