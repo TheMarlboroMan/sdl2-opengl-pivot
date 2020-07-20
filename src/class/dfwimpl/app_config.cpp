@@ -6,22 +6,30 @@ app_config::app_config(): base_config(get_file_path()) {
 }
 
 
-dfw::input_description app::input_description_from_config_token(const tools::dnot_token& tok) {
-
-	if(!tok.is_vector()) {
-		throw std::runtime_error("app::input_description_from_config_token, token is not vector");
+dfw::input_description app::input_description_from_config_token(const rapidjson::Value& tok)
+{
+	if(!tok.IsArray()) {
+		throw std::runtime_error("app::input_description_from_config_token, token is not array");
 	}
-	const auto& v=tok.get_vector();
 
-	if(v.size() != 3) throw std::runtime_error("app::input_description_from_config_token, vector has not size of 3");
-	return dfw::input_description{input_description_type_from_int(v[0]), v[2], v[1]};
+	const auto& v=tok.GetArray();
+
+	if(v.Size() != 3) {
+		throw std::runtime_error("app::input_description_from_config_token, array has not size of 3");
+	}
+
+	return dfw::input_description{
+		input_description_type_from_int(v[0].GetInt()), v[2].GetInt(), v[1].GetInt()
+	};
 }
 
-tools::dnot_token app::config_token_from_input_description(const dfw::input_description& id) {
+std::vector<int> app::config_token_from_input_description(const dfw::input_description& _id) {
 
-	tools::dnot_token res;
-	res.set(std::vector<tools::dnot_token>{ tools::dnot_token{input_description_int_from_type(id.type)}, tools::dnot_token{id.device}, tools::dnot_token{id.code}});
-	return res;
+	return std::vector<int>{
+		input_description_int_from_type(_id.type),
+		_id.device,
+		_id.code
+	};
 }
 
 dfw::input_description::types app::input_description_type_from_int(int v) {

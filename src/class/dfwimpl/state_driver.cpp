@@ -4,7 +4,6 @@
 #include "../controllers/states.h"
 
 //tools
-#include <tools/dnot_parser.h>
 #include <tools/string_utils.h>
 #include <lm/sentry.h>
 
@@ -46,17 +45,17 @@ state_driver::state_driver(dfw::kernel& kernel, app::app_config& c)
 void state_driver::prepare_video(dfw::kernel& kernel) {
 
 	kernel.init_video_system({
-		config.int_from_path("config:video:window_w_px"),
-		config.int_from_path("config:video:window_h_px"),
-		config.int_from_path("config:video:window_w_logical"),
-		config.int_from_path("config:video:window_h_logical"),
-		config.string_from_path("config:video:window_title"),
-		config.bool_from_path("config:video:window_show_cursor"),
+		config.int_from_path("video:window_w_px"),
+		config.int_from_path("video:window_h_px"),
+		config.int_from_path("video:window_w_logical"),
+		config.int_from_path("video:window_h_logical"),
+		config.string_from_path("video:window_title"),
+		config.bool_from_path("video:window_show_cursor"),
 		config.get_screen_vsync()
 	});
 
 	auto& screen=kernel.get_screen();
-	screen.set_fullscreen(config.bool_from_path("config:video:fullscreen"));
+	screen.set_fullscreen(config.bool_from_path("video:fullscreen"));
 
 	lm::log(log, lm::lvl::info)<<"registering fonts..."<<std::endl;
 
@@ -90,18 +89,18 @@ void state_driver::prepare_input(dfw::kernel& kernel) {
 
 	std::vector<input_pair> pairs{
 		{{input_description::types::keyboard, SDL_SCANCODE_ESCAPE, 0}, input_app::escape},
-		{input_description_from_config_token(config.token_from_path("config:input:left")), input_app::left},
-		{input_description_from_config_token(config.token_from_path("config:input:right")), input_app::right},
-		{input_description_from_config_token(config.token_from_path("config:input:up")), input_app::up},
-		{input_description_from_config_token(config.token_from_path("config:input:down")), input_app::down},
-		{input_description_from_config_token(config.token_from_path("config:input:space")), input_app::space},
-		{input_description_from_config_token(config.token_from_path("config:input:zoom_more")), input_app::zoom_more},
-		{input_description_from_config_token(config.token_from_path("config:input:zoom_less")), input_app::zoom_less},
-		{input_description_from_config_token(config.token_from_path("config:input:num_1")), input_app::num1},
-		{input_description_from_config_token(config.token_from_path("config:input:num_2")), input_app::num2},
-		{input_description_from_config_token(config.token_from_path("config:input:num_3")), input_app::num3},
-		{input_description_from_config_token(config.token_from_path("config:input:key_a")), input_app::key_a},
-		{input_description_from_config_token(config.token_from_path("config:input:key_s")), input_app::key_s}
+		{input_description_from_config_token(config.token_from_path("input:left")), input_app::left},
+		{input_description_from_config_token(config.token_from_path("input:right")), input_app::right},
+		{input_description_from_config_token(config.token_from_path("input:up")), input_app::up},
+		{input_description_from_config_token(config.token_from_path("input:down")), input_app::down},
+		{input_description_from_config_token(config.token_from_path("input:space")), input_app::space},
+		{input_description_from_config_token(config.token_from_path("input:zoom_more")), input_app::zoom_more},
+		{input_description_from_config_token(config.token_from_path("input:zoom_less")), input_app::zoom_less},
+		{input_description_from_config_token(config.token_from_path("input:num_1")), input_app::num1},
+		{input_description_from_config_token(config.token_from_path("input:num_2")), input_app::num2},
+		{input_description_from_config_token(config.token_from_path("input:num_3")), input_app::num3},
+		{input_description_from_config_token(config.token_from_path("input:key_a")), input_app::key_a},
+		{input_description_from_config_token(config.token_from_path("input:key_s")), input_app::key_s}
 	};
 
 	kernel.init_input_system(pairs);
