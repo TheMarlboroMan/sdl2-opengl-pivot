@@ -18,14 +18,6 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/src")
 
 #Add the include directories
 include_directories("include")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/../log/include/")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/../libdansdl2/include/")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/../libdansdl2-tools/include/")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/../tools/include/")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/../dfw/include/")
-IF(WIN32) 
-include_directories("${CMAKE_CURRENT_LIST_DIR}/../rapidjson/include/")
-ENDIF()
 
 #add the framework dependencies
 add_library(lm SHARED IMPORTED)
@@ -41,6 +33,13 @@ add_custom_command(TARGET pivot POST_BUILD COMMAND cp -r ../data ./build)
 
 IF(WIN32) 
 	target_compile_definitions(pivot PUBLIC -DWINBUILD)
+	
+	include_directories("${CMAKE_CURRENT_LIST_DIR}/../log/include/")
+	include_directories("${CMAKE_CURRENT_LIST_DIR}/../libdansdl2/include/")
+	include_directories("${CMAKE_CURRENT_LIST_DIR}/../libdansdl2-tools/include/")
+	include_directories("${CMAKE_CURRENT_LIST_DIR}/../tools/include/")
+	include_directories("${CMAKE_CURRENT_LIST_DIR}/../dfw/include/")
+	include_directories("${CMAKE_CURRENT_LIST_DIR}/../rapidjson/include/")
 
 	set_target_properties(lm PROPERTIES IMPORTED_LOCATION "C:/Program Files (x86)/lm/lib/liblm.dll")
 	set_target_properties(lm PROPERTIES IMPORTED_IMPLIB "C:/Program Files (x86)/lm/lib/liblm.dll")
