@@ -27,7 +27,7 @@ main_controller::main_controller(ldv::resource_manager& _v_manager, lda::resourc
 
 void main_controller::preloop(dfw::input&, float, int fps)
 {
-	fps_rep.set_text(std::string("FPS:")+compat::to_string(fps));
+
 }
 
 void main_controller::loop(dfw::input& input, const dfw::loop_iteration_data& _lid)
@@ -36,6 +36,12 @@ void main_controller::loop(dfw::input& input, const dfw::loop_iteration_data& _l
 	{
 		set_leave(true);
 		return;
+	}
+
+	if(input().has_joystick(0) && input().is_joystick_button_down(0, 2)) {
+
+		std::cout<<"yep"<<std::endl;
+	
 	}
 
 	changing_ttf_delta+=_lid.delta;
@@ -79,11 +85,19 @@ void main_controller::loop(dfw::input& input, const dfw::loop_iteration_data& _l
 	{
 		--angle;
 		--alpha; if(alpha < 0) alpha=0;
+		--blitcount;
+		if(blitcount < 0) {
+			blitcount=0;
+		}
 	}
 	else if(input.is_input_pressed(input_app::key_s))
 	{
 		++angle;
 		++alpha; if(alpha > 255) alpha=255;
+		++blitcount;
+		if(blitcount > 2000) {
+			blitcount=2000;
+		}
 	}
 
 	if(input.is_input_pressed(input_app::zoom_more)) camera.set_zoom(camera.get_zoom()+0.01);
@@ -97,8 +111,11 @@ void main_controller::postloop(dfw::input& , float, int)
 
 }
 
-void main_controller::draw(ldv::screen& screen, int)
+void main_controller::draw(ldv::screen& screen, int fps)
 {
+	fps_rep.set_text(std::string("FPS:")+compat::to_string(fps)+" BLITS:"+std::to_string(blitcount));
+
+
 	screen.clear(ldv::rgba8(0, 0, 0, 255));
 
 	int x=100;
@@ -148,7 +165,7 @@ void main_controller::draw(ldv::screen& screen, int)
 	puntos_rotar(screen, x, 128); x+=40;
 	changing_ttf(screen, changing_ttf_iterator);
 	ttf_align(screen, changing_ttf_iterator);
-
+	repeated_blits(screen);
 	ogl_text.draw(screen);
 	//TODO: This is not working.
 	fps_rep.draw(screen);
@@ -423,4 +440,27 @@ void  main_controller::slumber(dfw::input&)
 bool main_controller::can_leave_state() const
 {
 	return true;
+}
+
+void main_controller::repeated_blits(
+	ldv::screen& _screen
+) {
+
+	ldv::bitmap_representation r(v_manager.get_texture(1), {0,100,32,32}, {0,0,32,32});
+	r.set_blend(ldv::representation::blends::alpha);
+
+	std::vector<ldv::rect> clips {
+		{0,0,32,32},
+		{32,0,32,32},
+		{32,32,32,32},
+		{0,32,32,32},
+	};
+
+	for(int i=0; i<blitcount; i++) {
+		
+		r.draw(_screen);
+		r.set_clip( clips.at(i%clips.size()));
+		r.go_to({i, 100});
+	}
+
 }

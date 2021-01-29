@@ -59,6 +59,7 @@ class main_controller:
 	void					puntos(ldv::screen& screen, int x, int alpha);
 	void					puntos_rotar(ldv::screen& screen, int x, int alpha);
 	void					compuesta(ldv::screen& screen, int x);
+	void                    repeated_blits(ldv::screen&);
 
 	ldv::resource_manager&			v_manager;
 	lda::resource_manager&			a_manager;
@@ -71,12 +72,14 @@ class main_controller:
 						changing_ttf_iterator=0;
 	float				changing_ttf_delta;
 	const std::string 	changing_ttf_str;
+	int					blitcount{0};
 
 	ldv::camera				camera;
 	ldv::box_representation			moving_box;
 	ldv::point_representation 		moving_points;
 	ldv::line_representation	 	moving_line;
 	ldv::ttf_representation			fps_rep;
+
 
 	class ogl_text {
 		public:
